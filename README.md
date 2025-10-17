@@ -24,8 +24,8 @@ Desenvolvido como um **Dynamic Web Project** utilizando **Java**, **MySQL**, **H
 
 ## 🧩 Funcionalidades Atuais
 
-- 👤 Cadastro, edição e exclusão de clientes  
-- 💻 Registro de equipamentos e serviços  
+- 👤 Cadastro, edição e exclusão de clientes e funcionarios
+- 💻 Registro de equipamentos e serviços
 - 🧾 Geração e listagem de ordens de serviço  
 - 🔍 Busca por cliente, número de OS ou status  
 - 🗄️ Integração com banco de dados MySQL via JDBC  
