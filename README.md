@@ -10,15 +10,15 @@ Desenvolvido como um **Dynamic Web Project** utilizando **Java**, **MySQL**, **H
 ## 🚀 Tecnologias Utilizadas
 
 ### 🔹 Backend
-- **Java (Servlets e JSP)**
-- **JDBC** (para conexão com MySQL)
-- **MySQL** (banco de dados relacional)
-- **Apache Tomcat** (servidor de aplicação)
+- **Java**
+- **JDBC** 
+- **MySQL**
+- **Apache Tomcat**
 
 ### 🔹 Frontend
-- **HTML5** (estrutura)
-- **CSS3** (estilização)
-- **JavaScript** (interatividade e validações)
+- **HTML5** 
+- **CSS3** 
+- **JavaScript** 
 
 ---
 
