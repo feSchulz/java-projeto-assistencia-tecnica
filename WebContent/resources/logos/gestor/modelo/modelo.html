@@ -1,0 +1,69 @@
+
+		<script src="logos/gestor/modelo/modelo.js"></script>
+	
+		<button class="btnGeralprim btn-mg" id="btnPosicao" type="button"  data-toggle="modal" onclick="logos.equipamento.modalInserir()">Inserir Modelo</button>		
+		<button class="btnGeralsecund btn-mg" id="btnPosicao" type="button"  data-toggle="modal" onclick="logos.equipamento.preModalBusca()">Buscar Modelo</button>
+		
+		<div class="gridMarca" id="gridEquipamento"></div>
+		
+		<!-- Modal de Cadastro do modelo -->
+						
+		<div class="modal fade bd-example-modal-sm" id="modalinserir" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+		  <div class="modal-dialog modal-sm">
+		    <div class="modal-content">
+		      <div class="modal-header">
+		        <h5 id="h5modaltitle" class="modal-title tituloModalsm">Cadastrar Modelo</h5>
+		        <button type="button" class="close" data-dismiss="modal" aria-label="Fechar">
+		          <span aria-hidden="true">&times;</span>
+		        </button>
+		      </div>
+		      <div class="modal-body"> 	       	
+		   
+				 <select id="marca"></select>				 
+				 
+				<select id="equipamento">
+					 <option value="equipamento">Equipamento</option>
+					 <option value="0">Notebook</option>
+					 <option value="1">Smartphone</option>				 
+				</select>    			
+		       	<div>
+			       	<label  id= "labelModelo">Modelo</label> 				 
+			       	<input id="modelo" type="text" >
+		       	</div>
+		       	<input id="idmodelo" type="hidden">
+		      </div>
+		      <div class="linhaInferior">
+		       
+		        <button id="Salvar" type="button"   class="btnGeralprim inserirEqpt" onclick="logos.equipamento.Validar()">Salvar</button>
+		        <button id="Salvar" type="button"   class="btnGeralprim buscar"  onclick="logos.equipamento.validaBuscar()">Buscar</button>
+				<button id="Salvar" type="button"   class="btnGeralprim atualizar"  onclick="logos.equipamento.atualizar()">Atualizar</button>
+				 <button id="Cancelar" type="button" class="btnGeralsecund" data-dismiss="modal">Cancelar</button>
+				
+		      </div>
+		    </div>
+		  </div>
+		</div>			
+					
+		<!-- Modal de deletar, modificando para usar apenas uma modal-->
+				
+		<div class="modal fade bd-example-modal-mg" id="modalDell" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+		  <div class="modal-dialog modal-sm">
+		    <div class="modal-content">
+		      <div class="modal-header">
+		        <h5  class="modal-title tituloModalsm">Deletar modelo</h5>
+		        <button type="button" class="close" data-dismiss="modal" aria-label="Fechar">
+		          <span aria-hidden="true">&times;</span>
+		        </button>
+		      </div>
+		      <div class="modal-body">
+		        <label >Deseja realmente deletar este modelo ? </label>				
+				<input id="excluir" name="excluir" type="hidden">		
+		      </div>
+		      <div class="linhaInferior">		      
+		       	     
+		        <button id="Salvar" type="button"   class="dellSalvar"  onclick="logos.equipamento.excluir()">Sim</button>
+		         <button id="Cancelar" type="button" class="dellCancelar"  data-dismiss="modal">Não</button>			        		       	        
+		      </div>
+		    </div> 			
+		  </div>
+		</div>

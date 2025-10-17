@@ -1,0 +1,112 @@
+	
+		<script src="logos/gestor/marca/marca.js"></script>
+	
+		
+		<button class="btnGeralprim btn-mg" id="btnPosicao" type="button"  data-toggle="modal" data-target="#modalinserir">Inserir Marca</button>		
+		<button class="btnGeralsecund btn-mg" id="btnPosicao" type="button"  data-toggle="modal" data-target="#modalbusca">Buscar Marca</button>
+		
+		<!-- Grid de Marcas -->		
+		<div class="gridMarca" id="gridMarca"></div>
+		<div id="light-pagination" class="pagination"></div>
+		
+		
+		<!-- Modal de Cadastro da Marca -->
+						
+		<div class="modal fade bd-example-modal-sm" id="modalinserir" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+		  <div class="modal-dialog modal-sm">
+		    <div class="modal-content">
+		      <div class="modal-header">
+		        <h5 class="modal-title tituloModalsm">Cadastrar Marca</h5>
+		        <button type="button" class="close" data-dismiss="modal" aria-label="Fechar">
+		          <span aria-hidden="true">&times;</span>
+		        </button>
+		      </div>
+		      <div class="modal-body">
+		        <label>Marca:</label> 
+				<input id="marca" name="marca" type="text">				
+		      </div>
+		      <div class="linhaInferior">		    
+		        <button id="Salvar" type="button" class="btnGeralprim" onclick="logos.marca.validaMarca()">Salvar</button>
+		        <button id="Cancelar" type="button"  class="btnGeralsecund" data-dismiss="modal">Cancelar</button>
+		      </div>
+		    </div>
+		  </div>
+		</div>
+		
+		<!-- Modal de Busca da Marca -->		
+		
+		<div class="modal fade bd-example-modal-sm" id="modalbusca" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+		  <div class="modal-dialog modal-sm">
+		    <div class="modal-content">
+		      <div class="modal-header">
+		        <h5 class="modal-title tituloModalsm">Buscar Marca</h5>
+		        <button type="button" class="close" data-dismiss="modal" aria-label="Fechar">
+		          <span aria-hidden="true">&times;</span>
+		        </button>
+		      </div>
+		      <div class="modal-body">
+		        <label>Marca:</label> 
+				<input id="buscarmarca" name="buscarmarca" type="text">				
+		      </div>
+		      <div class="linhaInferior">
+		       <button  id="Salvar" type="button"   class="btnGeralprim"  onclick="logos.marca.validaBusca()">Buscar</button>		      
+		       <button  id="Cancelar" type="button" class="btnGeralsecund"  data-dismiss="modal">Cancelar</button>	       		        		       	        
+		      </div>
+		    </div> 			
+		  </div>
+		</div>
+			
+		<!-- Modal de editar -->
+			
+		<div class="modal fade bd-example-modal-sm" id="modaleditar" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+		  <div class="modal-dialog modal-sm">
+		    <div class="modal-content">
+		      <div class="modal-header">
+		        <h5 class="modal-title tituloModalsm">Editar Marca</h5>
+		        <button type="button" class="close" data-dismiss="modal" aria-label="Fechar">
+		          <span aria-hidden="true">&times;</span>
+		        </button>
+		      </div>
+		      <div class="modal-body">
+		        <label >Marca:</label> 
+				<input id="editarMarca" name="editarMarca" type="text">
+				<input id="idMarca" name="idMarca" type="hidden">		
+		      </div>
+		      <div class="linhaInferior">	       	     
+		        <button  id="Salvar" type="button"   class="btnGeralprim"  onclick="logos.marca.atualizaMarca()">Salvar</button>
+		         <button  id="Cancelar" type="button" class="btnGeralsecund"  data-dismiss="modal">Cancelar</button>			        		       	        
+		      </div>
+		    </div> 			
+		  </div>
+		</div>
+		
+		<!-- Modal de delletar -->
+				
+		<div class="gridMarca" id="gridMarca"></div>
+		
+		<div class="modal fade bd-example-modal-mg" id="modalDell" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+		  <div class="modal-dialog modal-sm">
+		    <div class="modal-content">
+		      <div class="modal-header">
+		        <h5 class="modal-title tituloModalsm">Deletar Marca</h5>
+		        <button type="button" class="close" data-dismiss="modal" aria-label="Fechar">
+		          <span aria-hidden="true">&times;</span>
+		        </button>
+		      </div>
+		      <div class="modal-body">
+		        <label >Deseja realmente deletar esta marca?</label>				
+				<input id="Dellmarca" name="Dellmarca" type="hidden">		
+		      </div>
+		      <div class="linhaInferior">		      
+		        		     
+		        <button id="Salvar" type="button"   class="dellSalvar"  onclick="logos.marca.deletarMarca()"> Sim </button>	
+		        <button id="Cancelar" type="button" class="dellCancelar"  data-dismiss="modal"> Não </button>	        		       	        
+		      </div>
+		    </div> 			
+		  </div>
+		</div>
+		
+
+			
+					
+		

@@ -1,0 +1,269 @@
+body{
+	padding:0px;
+	margin:1px; 
+	background-color:#5e646b80;
+	font-family:'Helvetica', 'Arial', sans-serif;
+}
+
+.imgLogo{	
+	width: 50px;
+    height: 50px;
+ 	float:left;  
+}
+
+.fas{
+	padding-right:10px;
+	padding-left:10px;
+}
+
+#imgvisualizar{
+	width: 20px;
+    height: 20px; 
+}
+
+
+#imgEdit{
+	margin-right:4px;
+	width: 10px;
+    height: 10px;
+}
+
+.imgUser{	
+	width: 45px;
+    height: 45px; 
+  	float:right;
+   	padding-top:5px;		
+}
+
+.navSuperior{
+	border: 1px solid #25292d;
+	border-radius: 10px;	
+	background-color:#25292d;	
+}
+
+.logo{
+	border-right:1px solid #ffffff;
+	border-radius:10px;
+}
+
+.nomeFunc{
+	padding-left:5px;															 
+}
+
+.infUsuario{	
+	float:right;
+	border-left: 1px solid #ffffff;	
+	border-radius:10px;
+}
+
+.Empresa,.nomeFunc{
+	color:#ffffffff;	
+	text-align:center;
+	padding-top:10px;
+	font-size:13px;
+}
+
+.conteudo{
+	max-width:1112px;
+	margin-top:10px;
+	margin-left:10px;
+	background-color:#ffffff03;
+	border:1px solid #000000;
+	border-radius:10px;		
+}
+
+.listaUL{	
+	padding-left:0px;
+	padding-top:10px;
+} 
+
+.navLateral{
+	border:1px solid #000000;
+	border-radius:10px;
+	margin-top:10px;
+	min-height: 562px;
+	margin-left:0px;
+	padding-left:0px;
+	padding-right:0px;
+	background-color:#343a40cc;	
+}
+
+.bttn{	
+	font-size:16px;	
+	text-align:left;
+	padding-left:10px;
+}
+
+.linhaUL{
+	display:block;
+	padding-left:1px;
+	padding-right:0px;	
+	color:#000000;	
+}
+
+.navbar{
+	display:block;	
+	padding:0px;
+	margin:0px;	
+}
+
+.bttn:hover{
+	background-color:#14ab8c;
+	border:1px solid #14ab8c;
+	border-radius:10px;
+}
+
+.dropdown-menu{
+	background-color:#afb2b5;
+	color:
+	text-align:left;	
+	font-size:14px;	
+	margin-left:10px;
+	width:210px;
+	border-radius:10px;		
+}
+
+.dropdown-item:hover{
+	background-color:#14ab8c;
+	border:1px solid #14ab8c;
+	border-radius:10px;	
+}
+
+.btnGeralprim,.dellSalvar{	
+	color:#000000;
+	margin-top:10px;
+	padding:10px;	
+	border:1px solid #14ab8c;
+	border-radius:10px;
+	background-color:#14ab8c;
+}
+
+.btnGeralprim:hover{
+	border:1px solid #000000ab;
+	border-radius:10px;	
+	border-radius: 10px;
+    box-shadow: 1px 1px 1px 2px #0c6d58;	
+}
+
+.btnGeralsecund,.dellCancelar{
+	color:#000000;
+	margin-top:10px;
+	padding:10px;	
+	border:1px solid #14ab8c;
+	border-radius:10px;
+	background-color:#afb2b500;
+}
+
+.btnGeralsecund:hover{			
+	border:1px solid #000000c7;
+	border-radius: 10px;
+    box-shadow:1px 1px 1px 2px #0c6d58;
+   
+}
+	
+input{
+	border:1px solid #00000052;
+	border-radius:5px;		
+}	
+.tituloModalsm{
+	margin-left:auto;
+}
+
+#btnPosicao{
+	margin-left:50px;
+	margin-right:15px;	
+}
+
+#Salvar,#editSalvarFunc,#BuscSalvar,#DelSalvar{
+	margin:10px 0px 15px 28px;	
+	padding:5px;
+	border-radius:5px;
+	
+}
+#Cancelar,#editCancelar,#BuscCancelar,#DelCancelar{
+	margin-left:95px;
+	
+	padding:5px;	
+	border-radius:5px;	
+}
+.linhaInferior{	
+	border-top:1px solid #dee2e6;
+}
+.table{
+	margin-top:50px;
+	width: auto;
+    height: 50px;
+	margin-left:50px;
+	text-align:center;
+	background-color:#fffffff5;		
+}
+tr:hover{
+	background-color:#7177792b;
+}
+
+.dellCancelar:houver{	
+	border:1px solid #000000c7;
+	border-radius: 10px;
+    box-shadow:1px 1px 1px 2px #0c6d58;
+}
+.dellSalvar:houver{	
+	border:1px solid #000000ab;
+	border-radius:10px;	
+	border-radius: 10px;
+    box-shadow: 1px 1px 1px 2px #0c6d58;
+}
+
+#alertMsg{
+	 display:block;
+	 margin:auto;
+	 width: 500px;
+     height: 45px;
+     font-size:13px;
+     font-weight:bolder;
+   text-align:center;
+}
+
+#imgVisualiza{
+	margin-left:12px;	
+	margin-right:12px;    
+}
+
+.pagination>li>a{  	
+    padding: 6px 13px;   
+    color: #000000;
+    text-decoration: none;
+    background-color: #ffffff;
+    border: 1px solid #14ab8c;
+}
+
+.panel-footer{
+	margin-left:50px;
+}
+
+#modalFuncionario{
+	width:30%;
+	margin:center;
+	font-size:13px;
+	font-weight:bolder;
+}
+
+#funci{
+	margin-top:25px;
+}
+
+#SalvarFunc{
+	margin:5px 450px 0px 45px;	
+	padding:5px;
+	border-radius:5px;
+}
+
+#modalFuncionario>input,select{
+	margin-bottom:10px;
+}
+
+#modalFuncionario>label{
+	margin-bottom:0px;
+}
+.gridCliente{
+	
+}
