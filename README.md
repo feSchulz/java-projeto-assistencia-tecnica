@@ -1,7 +1,6 @@
-# 🛠️ Assistência Técnica — Dynamic Web Project
+# 🛠️ Assistência Técnica — Logos
 
 Projeto de sistema web para gerenciamento de **ordens de serviço**, **clientes** e **equipamentos** de uma assistência técnica.  
-Desenvolvido como um **Dynamic Web Project** utilizando **Java**, **MySQL**, **HTML**, **CSS** e **JavaScript**.  
 
 > 💡 O objetivo deste projeto é **evoluir gradualmente**, aplicando novos conhecimentos e tecnologias conforme o aprendizado avança.
 
@@ -9,26 +8,24 @@ Desenvolvido como um **Dynamic Web Project** utilizando **Java**, **MySQL**, **H
 
 ## 🚀 Tecnologias Utilizadas
 
-### 🔹 Backend
+### 🔹 Backend (Atualizando)
 - **Java**
-- **JDBC** 
-- **MySQL**
-- **Apache Tomcat**
+- **Spring Boot** 
+- **MS SQLServer**
 
-### 🔹 Frontend
-- **HTML5** 
-- **CSS3** 
-- **JavaScript** 
 
+### 🔹 Frontend (pendente)
+- **React** 
+- **TypeScript**
 ---
 
-## 🧩 Funcionalidades Atuais
+## 🧩 Funcionalidades
 
 - 👤 Cadastro, edição e exclusão de clientes e funcionarios
 - 💻 Registro de equipamentos e serviços
 - 🧾 Geração e listagem de ordens de serviço  
 - 🔍 Busca por cliente, número de OS ou status  
-- 🗄️ Integração com banco de dados MySQL via JDBC  
+- 🗄️ Integração com banco de dados MS SQLSERVER
 
 ---
 
