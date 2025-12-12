@@ -115,7 +115,7 @@ body{
 
 .dropdown-menu{
 	background-color:#afb2b5;
-	color:
+
 	text-align:left;	
 	font-size:14px;	
 	margin-left:10px;
@@ -201,12 +201,12 @@ tr:hover{
 	background-color:#7177792b;
 }
 
-.dellCancelar:houver{	
+.dellCancelar:hover{
 	border:1px solid #000000c7;
 	border-radius: 10px;
     box-shadow:1px 1px 1px 2px #0c6d58;
 }
-.dellSalvar:houver{	
+.dellSalvar:hover{
 	border:1px solid #000000ab;
 	border-radius:10px;	
 	border-radius: 10px;
@@ -242,7 +242,7 @@ tr:hover{
 
 #modalFuncionario{
 	width:30%;
-	margin:center;
+	margin:auto;
 	font-size:13px;
 	font-weight:bolder;
 }
