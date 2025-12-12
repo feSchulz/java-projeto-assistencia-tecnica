@@ -9,8 +9,8 @@ Projeto de sistema web para gerenciamento de **ordens de serviço**, **clientes*
 ## 🚀 Tecnologias Utilizadas
 
 ### 🔹 Backend (Atualizando)
-- **Java**
-- **Spring Boot** 
+- **Java 21**
+- **Spring Boot 3.4.12** 
 - **MS SQLServer**
 
 
