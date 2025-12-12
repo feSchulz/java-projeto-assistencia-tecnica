@@ -9,26 +9,24 @@ Desenvolvido como um **Dynamic Web Project** utilizando **Java**, **MySQL**, **H
 
 ## 🚀 Tecnologias Utilizadas
 
-### 🔹 Backend
+### 🔹 Backend (Atualizando)
 - **Java**
-- **JDBC** 
-- **MySQL**
-- **Apache Tomcat**
+- **Spring Boot** 
+- **MS SQLServer**
 
-### 🔹 Frontend
-- **HTML5** 
-- **CSS3** 
-- **JavaScript** 
 
+### 🔹 Frontend (pendente)
+- **React** 
+- **TypeScript**
 ---
 
-## 🧩 Funcionalidades Atuais
+## 🧩 Funcionalidades
 
 - 👤 Cadastro, edição e exclusão de clientes e funcionarios
 - 💻 Registro de equipamentos e serviços
 - 🧾 Geração e listagem de ordens de serviço  
 - 🔍 Busca por cliente, número de OS ou status  
-- 🗄️ Integração com banco de dados MySQL via JDBC  
+- 🗄️ Integração com banco de dados MS SQLSERVER via JPA e Hyber  
 
 ---
 
