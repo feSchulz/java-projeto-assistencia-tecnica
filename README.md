@@ -25,7 +25,7 @@ Projeto de sistema web para gerenciamento de **ordens de serviço**, **clientes*
 - 💻 Registro de equipamentos e serviços
 - 🧾 Geração e listagem de ordens de serviço
 - 🔍 Busca por cliente, número de OS ou status
-- 🗄️ Integração com banco de dados MS SQLSERVER
+- 📊 Geração de relatórios
 
 ---
 
