@@ -1,0 +1,23 @@
+spring:
+  application:
+    name: logos
+  datasource:
+    url: jdbc:sqlserver://localhost:1433;databaseName=logos;encrypt=true;trustServerCertificate=true
+    username: sa
+    password: 123
+    driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
+
+    jpa:
+      show-sql: false
+      open-in-view: true
+      hibernate:
+        ddl-auto: none
+  logging:
+    level:
+      root:
+      br.com.feSchulz: DEBUG
+      #br.com.feSchulz: INFO
+      #br.com.feSchulz: WARN
+
+  spring-doc:
+    paths-to-match: /api/**/v1/**
