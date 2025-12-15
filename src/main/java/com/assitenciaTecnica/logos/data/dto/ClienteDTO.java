@@ -8,8 +8,6 @@ import com.assitenciaTecnica.logos.model.Usuario;
 public class ClienteDTO {
 	private Long id;
 	private Usuario pessoa;
-
-
 	private List<Equipamento> equipamentos;
 
 	public Long getId() {

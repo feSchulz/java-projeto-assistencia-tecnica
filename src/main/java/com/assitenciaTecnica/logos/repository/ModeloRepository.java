@@ -7,6 +7,5 @@ import java.util.List;
 public interface ModeloRepository extends JpaRepository<Modelo, Long> {
 
 
-    List<Modelo> findByNomeContainingIgnoreCase(String nome);
-    List<Modelo> findByMarcaId(Long marcaId);
+
 }

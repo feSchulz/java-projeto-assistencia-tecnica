@@ -1,48 +1,57 @@
 package com.assitenciaTecnica.logos.controllers;
 
-
+import io.swagger.v3.oas.annotations.tags.Tag;
+import com.assitenciaTecnica.logos.controllers.docs.FuncionarioControllerDocs;
 import com.assitenciaTecnica.logos.data.dto.FuncionarioDTO;
 import com.assitenciaTecnica.logos.services.FuncionarioService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/funcionariorest")
-public class FuncionarioController {
+@RequestMapping("/api/funcionarios/v1")
+@Tag(name = "Funcionario", description = "Endpoints para gerenciamento dos Funcionarios")
+public class FuncionarioController implements FuncionarioControllerDocs {
 
 	@Autowired
 	private FuncionarioService funcionarioService;
 
-	// Inserir funcionário
-	@PostMapping("/inserir")
-	public ResponseEntity<String> inserir(@RequestBody FuncionarioDTO funcionarioDTO) {
+	// Criar funcionário
+	@PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE,
+			produces = MediaType.APPLICATION_JSON_VALUE)
+	@Override
+	public ResponseEntity<String> createFuncionario(@RequestBody FuncionarioDTO funcionarioDTO) {
 		try {
 			funcionarioService.salvar(funcionarioDTO);
-			return ResponseEntity.ok("Funcionario cadastrado com sucesso");
+			return ResponseEntity.ok("Funcionário cadastrado com sucesso");
 		} catch (Exception e) {
 			e.printStackTrace();
-			return ResponseEntity.badRequest().body("Erro ao cadastrar Funcionario");
+			return ResponseEntity.badRequest().body("Erro ao cadastrar funcionário");
 		}
 	}
 
 	// Atualizar funcionário
-	@PutMapping("/atualizar")
-	public ResponseEntity<String> atualizar(@RequestBody FuncionarioDTO funcionarioDTO) {
+	@PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE,
+			produces = MediaType.APPLICATION_JSON_VALUE)
+	@Override
+	public ResponseEntity<String> updateFuncionario(@RequestBody FuncionarioDTO funcionarioDTO) {
 		try {
+
 			funcionarioService.atualizar(funcionarioDTO);
-			return ResponseEntity.ok("Funcionario editado com sucesso");
+			return ResponseEntity.ok("Funcionário editado com sucesso");
 		} catch (Exception e) {
 			e.printStackTrace();
-			return ResponseEntity.badRequest().body("Erro ao editar Funcionario");
+			return ResponseEntity.badRequest().body("Erro ao editar funcionário");
 		}
 	}
 
-	// Buscar funcionários por nome
-	@GetMapping("/buscar/{nome}")
-	public ResponseEntity<List<FuncionarioDTO>> buscarFuncionario(@PathVariable String nome) {
+	// Buscar funcionários por nome (query param)
+	@GetMapping(params = "nome", produces = MediaType.APPLICATION_JSON_VALUE)
+	@Override
+	public ResponseEntity<List<FuncionarioDTO>> getFuncionariosByName(@RequestParam String nome) {
 		try {
 			List<FuncionarioDTO> funcionarios = funcionarioService.buscarPorNome(nome);
 			return ResponseEntity.ok(funcionarios);
@@ -52,21 +61,23 @@ public class FuncionarioController {
 		}
 	}
 
-	// Deletar funcionário por ID
-	@DeleteMapping("/deletar/{id}")
-	public ResponseEntity<String> deletar(@PathVariable Long id) {
+	// Listar todos os funcionários
+	@GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+	@Override
+	public ResponseEntity<List<FuncionarioDTO>> getAllFuncionarios() {
 		try {
-			funcionarioService.deletar(id);
-			return ResponseEntity.ok("Funcionario deletado com sucesso");
+			List<FuncionarioDTO> funcionarios = funcionarioService.findAll();
+			return ResponseEntity.ok(funcionarios);
 		} catch (Exception e) {
 			e.printStackTrace();
-			return ResponseEntity.badRequest().body("Erro ao deletar Funcionario");
+			return ResponseEntity.internalServerError().build();
 		}
 	}
 
 	// Buscar funcionário por ID
-	@GetMapping("/buscarID/{id}")
-	public ResponseEntity<FuncionarioDTO> buscarPorId(@PathVariable Long id) {
+	@GetMapping("/{id}")
+	@Override
+	public ResponseEntity<FuncionarioDTO> getFuncionarioById(@PathVariable Long id) {
 		try {
 			FuncionarioDTO funcionario = funcionarioService.buscarPorId(id);
 			return ResponseEntity.ok(funcionario);
@@ -75,4 +86,5 @@ public class FuncionarioController {
 			return ResponseEntity.internalServerError().build();
 		}
 	}
+
 }

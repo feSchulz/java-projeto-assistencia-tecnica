@@ -13,15 +13,15 @@ import jakarta.persistence.Table;
 @Table(name="cidade")
 public class Cidade {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Id @GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
+
+	@Column(nullable = false, unique = true)
+	private Integer ibge;
+
 	@Column(nullable = false)
 	private String nome;
 
-	@ManyToOne
-	@JoinColumn(name = "estado_id", nullable = false)
-	private Estado estado;
 
 	public Long getId() {
 		return id;
@@ -31,19 +31,20 @@ public class Cidade {
 		this.id = id;
 	}
 
+	public Integer getIbge() {
+		return ibge;
+	}
+
+	public void setIbge(Integer ibge) {
+		this.ibge = ibge;
+	}
+
 	public String getNome() {
 		return nome;
 	}
 
-	public void setNome(String cidade) {
-		this.nome = cidade;
+	public void setNome(String nome) {
+		this.nome = nome;
 	}
 
-	public Estado getEstado() {
-		return estado;
-	}
-
-	public void setEstado(Estado estado) {
-		this.estado = estado;
-	}
 }

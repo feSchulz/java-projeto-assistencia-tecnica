@@ -7,13 +7,6 @@ import java.util.Optional;
 
 public interface FuncionarioRepository extends JpaRepository<Funcionario, Long> {
 
-    Optional<Funcionario> findByLogin(String login);
+    List<Funcionario> findByUsuario_NomeIgnoreCase(String nome);
 
-    List<Funcionario> findByUsuarioNomeContainingIgnoreCase(String nome);
-
-    boolean existsByLogin(String login);
-
-    boolean existsByUsuarioCpf(String cpf);
-
-    boolean existsByUsuarioEmail(String email);
 }

@@ -16,7 +16,7 @@ public class PapelSeed {
     public void seed() {
         if (papelRepository.count() == 0) {
             Papel admin = new Papel();
-            admin.setCodigo("ADM");
+            admin.setCodigo("adm");
             admin.setNome("Administrador do sistema");
             papelRepository.save(admin);
         }

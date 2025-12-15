@@ -6,15 +6,13 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>3.4.12</version>
+		<version>3.4.0</version>
 		<relativePath/>
 	</parent>
 
-	<groupId>com.assitenciaTecnica</groupId>
-	<artifactId>logos</artifactId>
+	<groupId>com.assitenciaTecnica.logos</groupId>
+	<artifactId>java-projeto-assitencia-tecnica</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<packaging>war</packaging>
-	<name>logos</name>
 
 	<properties>
 		<java.version>21</java.version>
@@ -22,85 +20,75 @@
 		<springdoc.version>2.7.0</springdoc.version>
 	</properties>
 
-	<dependencies>
-		<!-- Spring Data JPA: ORM para trabalhar com bancos relacionais -->
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-data-jpa</artifactId>
-		</dependency>
+		<dependencies>
+			<!-- Spring Data JPA -->
+			<dependency>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-starter-data-jpa</artifactId>
+			</dependency>
 
-		<!-- Spring Data MongoDB: integração com banco NoSQL MongoDB -->
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-data-mongodb</artifactId>
-		</dependency>
+			<!-- Spring Web -->
+			<dependency>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-starter-web</artifactId>
+			</dependency>
 
-		<!-- OAuth2 Client: autenticação/autorização com provedores externos (Google, GitHub etc.) -->
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-oauth2-client</artifactId>
-		</dependency>
+			<!-- Dozer -->
+			<dependency>
+				<groupId>com.github.dozermapper</groupId>
+				<artifactId>dozer-core</artifactId>
+				<version>${dozer.version}</version>
+			</dependency>
 
-		<!-- Spring Web MVC: suporte a REST APIs e controllers tradicionais -->
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-web</artifactId>
-		</dependency>
+			<!-- DevTools -->
+			<dependency>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-devtools</artifactId>
+				<scope>runtime</scope>
+				<optional>true</optional>
+			</dependency>
 
-		<!-- Dozer -->
-		<dependency>
-			<groupId>com.github.dozermapper</groupId>
-			<artifactId>dozer-core</artifactId>
-			<version>${dozer.version}</version>
-		</dependency>
+			<!-- SQL Server JDBC -->
+			<dependency>
+				<groupId>com.microsoft.sqlserver</groupId>
+				<artifactId>mssql-jdbc</artifactId>
+				<scope>runtime</scope>
+			</dependency>
 
-		<!-- DevTools: hot reload e utilidades para desenvolvimento -->
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-devtools</artifactId>
-			<scope>runtime</scope>
-			<optional>true</optional>
-		</dependency>
+			<!-- FLYWAY CORE -->
+			<dependency>
+				<groupId>org.flywaydb</groupId>
+				<artifactId>flyway-core</artifactId>
+			</dependency>
 
-		<!-- Driver JDBC para SQL Server -->
-		<dependency>
-			<groupId>com.microsoft.sqlserver</groupId>
-			<artifactId>mssql-jdbc</artifactId>
-			<scope>runtime</scope>
-		</dependency>
-
-
-		<!-- SpringDoc OpenAPI: gera documentação Swagger para suas APIs -->
-		<dependency>
-			<groupId>org.springdoc</groupId>
-			<artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
-			<version>${springdoc.version}</version>
-		</dependency>
-
-		<!-- Spring Boot Test: suporte a testes unitários e de integração -->
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-test</artifactId>
-			<scope>test</scope>
-		</dependency>
-
-		<!-- Reactor Test: utilitários para testar código reativo (WebFlux) -->
-		<dependency>
-			<groupId>io.projectreactor</groupId>
-			<artifactId>reactor-test</artifactId>
-			<scope>test</scope>
-		</dependency>
-
-		<!-- Flyway: migração e versionamento de banco de dados -->
-		<dependency>
-			<groupId>org.flywaydb</groupId>
-			<artifactId>flyway-core</artifactId>
-		</dependency>
+			<!-- FLYWAY – suporte específico para SQL Server -->
+			<dependency>
+				<groupId>org.flywaydb</groupId>
+				<artifactId>flyway-sqlserver</artifactId>
+			</dependency>
 
 
-	</dependencies>
+			<!-- SpringDoc OpenAPI -->
+			<dependency>
+				<groupId>org.springdoc</groupId>
+				<artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+				<version>${springdoc.version}</version>
+			</dependency>
 
+			<!-- Spring Boot Test -->
+			<dependency>
+				<groupId>org.springframework.boot</groupId>
+				<version>3.4.0</version>
+				<artifactId>spring-boot-starter-test</artifactId>
+				<scope>test</scope>
+			</dependency>
 
+			<dependency>
+				<groupId>io.projectreactor</groupId>
+				<artifactId>reactor-test</artifactId>
+				<scope>test</scope>
+			</dependency>
+		</dependencies>
 
 	<build>
 		<plugins>

@@ -23,7 +23,7 @@ public class ClienteService {
     }
 
     public List<ClienteDTO> buscar(String termo) {
-        List<Cliente> modelCliente = clienteRepository.findByPessoaNomeContainingIgnoreCase(termo);
+        List<Cliente> modelCliente = clienteRepository.findByUsuario_NomeIgnoreCase(termo);
         return ObjectMapper.parseListObjects(modelCliente, ClienteDTO.class);
     }
 
@@ -36,5 +36,10 @@ public class ClienteService {
 
         Cliente cliente = ObjectMapper.parseObject(dto, Cliente.class);
         clienteRepository.save(cliente);
+    }
+
+    public List<ClienteDTO> findAll() {
+        List<Cliente> modelCliente = clienteRepository.findAll();
+        return ObjectMapper.parseListObjects(modelCliente, ClienteDTO.class);
     }
 }

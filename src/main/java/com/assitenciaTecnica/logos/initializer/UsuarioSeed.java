@@ -1,5 +1,7 @@
 package com.assitenciaTecnica.logos.initializer;
 
+import java.util.ArrayList;
+import java.util.List;
 import org.springframework.stereotype.Component;
 import com.assitenciaTecnica.logos.model.Funcionario;
 import com.assitenciaTecnica.logos.model.Papel;
@@ -29,14 +31,16 @@ public class UsuarioSeed {
             usuarioAdm.setCpf("00000000000");
             usuarioAdm.setEmail("admin@sistema.com");
             usuarioAdm.setTelefone("000000000");
-            usuarioRepository.save(usuarioAdm);
 
-            Papel admin = papelRepository.findByCodigo("ADM").orElseThrow();
+
+            Papel admin = papelRepository.findByCodigo("adm");
 
             Funcionario funcionarioAdm = new Funcionario();
             funcionarioAdm.setUsuario(usuarioAdm);
+            funcionarioAdm.setLogin("adm");
+            funcionarioAdm.setSenha("123");
             funcionarioAdm.setPapel(admin);
-            funcionarioAdm.setPapel(admin);
+
             funcionarioRepository.save(funcionarioAdm);
         }
     }

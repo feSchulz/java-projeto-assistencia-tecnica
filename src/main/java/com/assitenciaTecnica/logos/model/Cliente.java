@@ -18,8 +18,8 @@ public class Cliente {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	@OneToOne
-	@JoinColumn(name = "pessoa_id", nullable = false) // FK na tabela cliente
-	private Usuario pessoa;
+	@JoinColumn(name = "usuario_id", nullable = false) // FK na tabela cliente
+	private Usuario usuario;
 
 	@OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL)
 	private List<Equipamento> equipamentos;
@@ -33,11 +33,11 @@ public class Cliente {
 	}
 
 	public Usuario getPessoa() {
-		return pessoa;
+		return usuario;
 	}
 
 	public void setPessoa(Usuario pessoa) {
-		this.pessoa = pessoa;
+		this.usuario = pessoa;
 	}
 
 	public List<Equipamento> getEquipamentos() {

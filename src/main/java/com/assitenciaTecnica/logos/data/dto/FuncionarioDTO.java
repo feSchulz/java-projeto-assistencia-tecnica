@@ -10,9 +10,8 @@ public class FuncionarioDTO {
 	private Long id;
 	private String login;
 	private String senha;
-	private Papel papel;
 	private Usuario usuario;
-	private Endereco endereco;
+
 
 
 	public Usuario getUsuario() {
@@ -46,21 +45,7 @@ public class FuncionarioDTO {
 		this.senha = senha;
 	}
 
-	public Papel getPapel() {
-		return papel;
-	}
 
-	public void setPapel(Papel papel) {
-		this.papel = papel;
-	}
-
-	public Endereco getEndereco() {
-		return endereco;
-	}
-
-	public void setEndereco(Endereco endereco) {
-		this.endereco = endereco;
-	}
 }
 
 

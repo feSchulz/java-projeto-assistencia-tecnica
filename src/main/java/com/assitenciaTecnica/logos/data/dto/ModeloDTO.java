@@ -6,7 +6,7 @@ public class ModeloDTO {
 
     private Long id;
     private String nome;
-    private Marca marca;
+
     public Long getId() {
         return id;
     }
@@ -23,11 +23,4 @@ public class ModeloDTO {
         this.nome = nome;
     }
 
-    public Marca getMarca() {
-        return marca;
-    }
-
-    public void setMarca(Marca marca) {
-        this.marca = marca;
-    }
 }

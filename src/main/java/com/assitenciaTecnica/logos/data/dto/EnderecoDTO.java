@@ -6,17 +6,11 @@ import com.assitenciaTecnica.logos.model.Cidade;
 public class EnderecoDTO {
 
 	private Long id;
-
 	private String rua;
-
 	private Long numero;
-
 	private String bairro;
-
 	private Cidade cidade;
-
 	private String complemento;
-
 	private String cep;
 
 	public Long getId() {

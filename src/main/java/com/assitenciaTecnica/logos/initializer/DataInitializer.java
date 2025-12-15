@@ -8,17 +8,11 @@ public class DataInitializer implements CommandLineRunner {
 
     private final UsuarioSeed usuarioSeed;
     private final PapelSeed papelSeed;
-    private final LocalizacaoSeed localizacaoSeed;
-    private final MarcaModeloSeed marcaModeloSeed;
 
     public DataInitializer(UsuarioSeed usuarioSeed,
-                           PapelSeed papelSeed,
-                           LocalizacaoSeed localizacaoSeed,
-                           MarcaModeloSeed marcaModeloSeed) {
+                           PapelSeed papelSeed) {
         this.usuarioSeed = usuarioSeed;
         this.papelSeed = papelSeed;
-        this.localizacaoSeed = localizacaoSeed;
-        this.marcaModeloSeed = marcaModeloSeed;
     }
 
     @Override
@@ -26,8 +20,6 @@ public class DataInitializer implements CommandLineRunner {
         // ordem de execução dos seeds
         papelSeed.seed();
         usuarioSeed.seed();
-        localizacaoSeed.seed();
-        marcaModeloSeed.seed();
     }
 }
 

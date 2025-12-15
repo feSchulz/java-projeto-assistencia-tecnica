@@ -7,7 +7,7 @@ import com.assitenciaTecnica.logos.model.Cidade;
 public class EstadoDTO {
 
 	private Long id;
-	private String estado;
+	private String nome;
 	private List<Cidade> cidades;
 
 	public Long getId() {
@@ -18,12 +18,12 @@ public class EstadoDTO {
 		this.id = id;
 	}
 
-	public String getEstado() {
-		return estado;
+	public String getNome() {
+		return nome;
 	}
 
-	public void setEstado(String estado) {
-		this.estado = estado;
+	public void setNome(String nome) {
+		this.nome = nome;
 	}
 
 	public List<Cidade> getCidades() {

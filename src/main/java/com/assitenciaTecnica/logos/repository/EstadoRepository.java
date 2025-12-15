@@ -6,6 +6,6 @@ import java.util.List;
 
 public interface EstadoRepository extends JpaRepository<Estado, Long> {
 
-   List<Estado> findByNomeContainingIgnoreCase(String nome);
-    boolean existsByNome(String nome);
+
+
 }

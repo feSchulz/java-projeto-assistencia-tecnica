@@ -1,6 +1,7 @@
 package com.assitenciaTecnica.logos.services;
 
 
+import com.assitenciaTecnica.logos.data.dto.EnderecoDTO;
 import com.assitenciaTecnica.logos.data.dto.EquipamentoDTO;
 import com.assitenciaTecnica.logos.mapper.ObjectMapper;
 import com.assitenciaTecnica.logos.model.Equipamento;
@@ -22,22 +23,14 @@ public class EquipamentoService {
         equipamentoRepository.save(equipamento);
     }
 
-    public List<EquipamentoDTO> buscarPorModelo(EquipamentoDTO dto) {
-
-        List<Equipamento> equipamento = equipamentoRepository.findByModeloId(dto.getModelo().getId());
-        List<EquipamentoDTO> equipamentoDTOS = ObjectMapper.parseListObjects(equipamento, EquipamentoDTO.class);
-        return equipamentoDTOS;
-
-    }
-
     public EquipamentoDTO buscarPorId(Long id) {
         Equipamento equipamento = equipamentoRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Equipamento não encontrado"));
-        return EquipamentoDTO.toDTO(equipamento);
+        return ObjectMapper.parseObject(equipamento, EquipamentoDTO.class);
     }
 
     public void atualizar(EquipamentoDTO dto) {
-        Equipamento equipamento = EquipamentoDTO.toEntity(dto);
+        Equipamento equipamento = ObjectMapper.parseObject(dto, Equipamento.class);
         equipamentoRepository.save(equipamento);
     }
 

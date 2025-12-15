@@ -17,11 +17,10 @@ public class Papel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false)
     private String codigo;
 
-    @Column(nullable = false, length = 100)
+    @Column(nullable = false)
     private String nome;
 
     @OneToMany(mappedBy = "papel", cascade = CascadeType.ALL)

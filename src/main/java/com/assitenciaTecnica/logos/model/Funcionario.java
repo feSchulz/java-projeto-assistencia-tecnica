@@ -11,10 +11,10 @@ public class Funcionario implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, length = 50, unique = true)
+    @Column(nullable = false,  unique = true)
     private String login;
 
-    @Column(nullable = false, length = 255)
+    @Column(nullable = false)
     private String senha;
 
     @ManyToOne
@@ -25,9 +25,6 @@ public class Funcionario implements Serializable {
     @JoinColumn(name = "usuario_id", nullable = false)
     private Usuario usuario;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "endereco_id", nullable = false)
-    private Endereco endereco;
 
     // Getters e Setters
     public Long getId() { return id; }
@@ -45,6 +42,4 @@ public class Funcionario implements Serializable {
     public Usuario getUsuario() { return usuario; }
     public void setUsuario(Usuario usuario) { this.usuario = usuario; }
 
-    public Endereco getEndereco() { return endereco; }
-    public void setEndereco(Endereco endereco) { this.endereco = endereco; }
 }

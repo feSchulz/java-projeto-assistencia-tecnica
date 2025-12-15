@@ -6,6 +6,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import java.io.Serializable;
@@ -19,11 +20,20 @@ public class Estado implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	@Column(nullable = false)
+
+	private Integer ibge;
+
+	@Column(length = 2, nullable = false, unique = true)
+	private String sigla;
+
+	@Column(length = 100, nullable = false)
 	private String nome;
 
-	@OneToMany(mappedBy = "estado", cascade = CascadeType.ALL)
+	// Unidirecional: Estado conhece suas cidades
+	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+	@JoinColumn(name = "estado_id") // cria a FK na tabela cidade
 	private List<Cidade> cidades;
+
 
 	public Long getId() {
 		return id;
@@ -33,12 +43,28 @@ public class Estado implements Serializable {
 		this.id = id;
 	}
 
+	public Integer getIbge() {
+		return ibge;
+	}
+
+	public void setIbge(Integer ibge) {
+		this.ibge = ibge;
+	}
+
+	public String getSigla() {
+		return sigla;
+	}
+
+	public void setSigla(String sigla) {
+		this.sigla = sigla;
+	}
+
 	public String getNome() {
 		return nome;
 	}
 
-	public void setNome(String estado) {
-		this.nome = estado;
+	public void setNome(String nome) {
+		this.nome = nome;
 	}
 
 	public List<Cidade> getCidades() {
