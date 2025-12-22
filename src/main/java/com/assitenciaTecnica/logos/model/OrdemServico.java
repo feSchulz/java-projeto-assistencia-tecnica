@@ -1,5 +1,6 @@
 package com.assitenciaTecnica.logos.model;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -7,8 +8,10 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import java.util.GregorianCalendar;
+import java.util.List;
 import com.assitenciaTecnica.logos.model.enums.StatusOrdemServico;
 
 @Entity
@@ -30,6 +33,8 @@ public class OrdemServico {
     private  GregorianCalendar dataConclusao;
     @Column(nullable = false)
     private Double valor;
+    @Column(nullable = false)
+    private Long status;
     @ManyToOne
     @JoinColumn(name = "equipamento_id", nullable = false)
     private Equipamento equipamento;
@@ -40,8 +45,23 @@ public class OrdemServico {
     @JoinColumn(name = "funcionario_id", nullable = false)
     private Funcionario funcionarioResponsavel;
 
-    @Column(nullable = false)
-    private Long status;
+    @OneToMany(mappedBy = "ordemServico", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<PecaOrdemServico> pecas;
+
+
+
+
+    public void setStatus(Long status) {
+        this.status = status;
+    }
+
+    public List<PecaOrdemServico> getPecas() {
+        return pecas;
+    }
+
+    public void setPecas(List<PecaOrdemServico> pecas) {
+        this.pecas = pecas;
+    }
 
     public StatusOrdemServico getStatus() {
         return StatusOrdemServico.fromCodigo(status);

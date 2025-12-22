@@ -2,7 +2,7 @@ package com.assitenciaTecnica.logos.initializer;
 
 import org.springframework.stereotype.Component;
 import com.assitenciaTecnica.logos.model.Papel;
-import com.assitenciaTecnica.logos.repository.PapelRepository;
+import com.assitenciaTecnica.logos.repositories.PapelRepository;
 
 
 @Component

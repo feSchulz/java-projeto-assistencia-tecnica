@@ -1,9 +1,10 @@
 package com.assitenciaTecnica.logos.services;
 
+import com.assitenciaTecnica.logos.controllers.security.Securitypassword;
 import com.assitenciaTecnica.logos.data.dto.FuncionarioDTO;
 import com.assitenciaTecnica.logos.mapper.ObjectMapper;
 import com.assitenciaTecnica.logos.model.Funcionario;
-import com.assitenciaTecnica.logos.repository.FuncionarioRepository;
+import com.assitenciaTecnica.logos.repositories.FuncionarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,14 +15,21 @@ public class FuncionarioService {
 
     @Autowired
     private FuncionarioRepository funcionarioRepository;
-
+    @Autowired
+    private Securitypassword sc;
     public void salvar(FuncionarioDTO dto) {
         Funcionario funcionario = ObjectMapper.parseObject(dto, Funcionario.class);
+        String senha = funcionario.getSenha();
+        senha = sc.passwordEncoder().encode(senha);
+        funcionario.setSenha(senha);
         funcionarioRepository.save(funcionario);
     }
 
     public void atualizar(FuncionarioDTO dto) {
         Funcionario funcionario = ObjectMapper.parseObject(dto, Funcionario.class);
+        String senha = funcionario.getSenha();
+        senha = sc.passwordEncoder().encode(senha);
+        funcionario.setSenha(senha);
         funcionarioRepository.save(funcionario);
     }
 

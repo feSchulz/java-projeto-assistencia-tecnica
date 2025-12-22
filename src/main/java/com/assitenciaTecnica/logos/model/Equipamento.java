@@ -20,9 +20,12 @@ public class Equipamento implements Serializable{
 	private String equipamento;
 
 	@ManyToOne
+	@JoinColumn(name = "marca_id", nullable = false)
+	private Marca marca;
+
+	@ManyToOne
 	@JoinColumn(name = "modelo_id", nullable = false)
 	private Modelo modelo;
-
 	@ManyToOne
 	@JoinColumn(name = "cliente_id", nullable = false)
 	private Cliente cliente;
@@ -41,6 +44,14 @@ public class Equipamento implements Serializable{
 
 	public void setEquipamento(String equipamento) {
 		this.equipamento = equipamento;
+	}
+
+	public Marca getMarca() {
+		return marca;
+	}
+
+	public void setMarca(Marca marca) {
+		this.marca = marca;
 	}
 
 	public Modelo getModelo() {

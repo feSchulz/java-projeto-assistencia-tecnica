@@ -1,12 +1,14 @@
 package com.assitenciaTecnica.logos.data.dto;
 
 import com.assitenciaTecnica.logos.model.Cliente;
+import com.assitenciaTecnica.logos.model.Marca;
 import com.assitenciaTecnica.logos.model.Modelo;
 
 
 public class EquipamentoDTO {
 	private Long id;
 	private String equipamento;
+	private Marca marca;
 	private Modelo modelo;
 	private Cliente cliente;
 
@@ -40,5 +42,13 @@ public class EquipamentoDTO {
 
 	public void setCliente(Cliente cliente) {
 		this.cliente = cliente;
+	}
+
+	public Marca getMarca() {
+		return marca;
+	}
+
+	public void setMarca(Marca marca) {
+		this.marca = marca;
 	}
 }

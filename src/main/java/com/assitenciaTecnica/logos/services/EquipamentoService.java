@@ -1,16 +1,13 @@
 package com.assitenciaTecnica.logos.services;
 
 
-import com.assitenciaTecnica.logos.data.dto.EnderecoDTO;
 import com.assitenciaTecnica.logos.data.dto.EquipamentoDTO;
 import com.assitenciaTecnica.logos.mapper.ObjectMapper;
 import com.assitenciaTecnica.logos.model.Equipamento;
-import com.assitenciaTecnica.logos.repository.EquipamentoRepository;
+import com.assitenciaTecnica.logos.repositories.EquipamentoRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 public class EquipamentoService {

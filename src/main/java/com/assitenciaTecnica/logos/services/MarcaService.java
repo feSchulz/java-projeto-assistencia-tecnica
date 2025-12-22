@@ -4,7 +4,7 @@ package com.assitenciaTecnica.logos.services;
 import com.assitenciaTecnica.logos.data.dto.MarcaDTO;
 import com.assitenciaTecnica.logos.mapper.ObjectMapper;
 import com.assitenciaTecnica.logos.model.Marca;
-import com.assitenciaTecnica.logos.repository.MarcaRepository;
+import com.assitenciaTecnica.logos.repositories.MarcaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

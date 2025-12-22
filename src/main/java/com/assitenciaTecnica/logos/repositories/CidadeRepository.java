@@ -1,8 +1,7 @@
-package com.assitenciaTecnica.logos.repository;
+package com.assitenciaTecnica.logos.repositories;
 
 import com.assitenciaTecnica.logos.model.Cidade;
 import org.springframework.data.jpa.repository.JpaRepository;
-import java.util.List;
 
 public interface CidadeRepository extends JpaRepository<Cidade, Long> {
 

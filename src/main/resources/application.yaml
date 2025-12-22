@@ -19,7 +19,7 @@ spring:
 
   logging:
     level:
-      root: warn
+      root: trace
       br.com.feSchulz: DEBUG
 
   spring-doc:

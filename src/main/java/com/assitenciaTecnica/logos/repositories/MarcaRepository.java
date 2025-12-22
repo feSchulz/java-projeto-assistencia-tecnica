@@ -1,6 +1,5 @@
-package com.assitenciaTecnica.logos.repository;
+package com.assitenciaTecnica.logos.repositories;
 
-import com.assitenciaTecnica.logos.model.Funcionario;
 import com.assitenciaTecnica.logos.model.Marca;
 import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;

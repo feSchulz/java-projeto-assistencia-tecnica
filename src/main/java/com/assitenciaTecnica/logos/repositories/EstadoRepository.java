@@ -1,8 +1,7 @@
-package com.assitenciaTecnica.logos.repository;
+package com.assitenciaTecnica.logos.repositories;
 
 import com.assitenciaTecnica.logos.model.Estado;
 import org.springframework.data.jpa.repository.JpaRepository;
-import java.util.List;
 
 public interface EstadoRepository extends JpaRepository<Estado, Long> {
 

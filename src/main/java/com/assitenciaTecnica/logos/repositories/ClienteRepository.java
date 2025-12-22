@@ -1,7 +1,6 @@
-package com.assitenciaTecnica.logos.repository;
+package com.assitenciaTecnica.logos.repositories;
 
 import com.assitenciaTecnica.logos.model.Cliente;
-import com.assitenciaTecnica.logos.model.Funcionario;
 import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 

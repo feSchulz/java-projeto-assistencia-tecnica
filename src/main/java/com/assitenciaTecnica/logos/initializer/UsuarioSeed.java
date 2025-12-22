@@ -1,14 +1,12 @@
 package com.assitenciaTecnica.logos.initializer;
 
-import java.util.ArrayList;
-import java.util.List;
 import org.springframework.stereotype.Component;
 import com.assitenciaTecnica.logos.model.Funcionario;
 import com.assitenciaTecnica.logos.model.Papel;
 import com.assitenciaTecnica.logos.model.Usuario;
-import com.assitenciaTecnica.logos.repository.FuncionarioRepository;
-import com.assitenciaTecnica.logos.repository.PapelRepository;
-import com.assitenciaTecnica.logos.repository.UsuarioRepository;
+import com.assitenciaTecnica.logos.repositories.FuncionarioRepository;
+import com.assitenciaTecnica.logos.repositories.PapelRepository;
+import com.assitenciaTecnica.logos.repositories.UsuarioRepository;
 
 @Component
 public class UsuarioSeed {

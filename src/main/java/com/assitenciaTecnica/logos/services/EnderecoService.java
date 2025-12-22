@@ -11,8 +11,8 @@ import com.assitenciaTecnica.logos.data.dto.EstadoDTO;
 import com.assitenciaTecnica.logos.mapper.ObjectMapper;
 import com.assitenciaTecnica.logos.model.Cidade;
 import com.assitenciaTecnica.logos.model.Estado;
-import com.assitenciaTecnica.logos.repository.CidadeRepository;
-import com.assitenciaTecnica.logos.repository.EstadoRepository;
+import com.assitenciaTecnica.logos.repositories.CidadeRepository;
+import com.assitenciaTecnica.logos.repositories.EstadoRepository;
 
 @Service
 public class EnderecoService {

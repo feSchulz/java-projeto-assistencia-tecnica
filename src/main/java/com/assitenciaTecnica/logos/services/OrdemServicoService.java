@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 import com.assitenciaTecnica.logos.data.dto.OrdemServicoDTO;
 import com.assitenciaTecnica.logos.mapper.ObjectMapper;
 import com.assitenciaTecnica.logos.model.OrdemServico;
-import com.assitenciaTecnica.logos.repository.OrdemServicoRepository;
+import com.assitenciaTecnica.logos.repositories.OrdemServicoRepository;
 
 @Service
 public class OrdemServicoService {
