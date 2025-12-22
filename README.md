@@ -8,14 +8,14 @@ Projeto de sistema web para gerenciamento de **ordens de serviço**, **clientes*
 
 ## 🚀 Tecnologias Utilizadas
 
-### 🔹 Backend (Atualizando)
+### 🔹 Backend (V1)
 - **Java 21** - Linguagem principal para desenvolvimento do backend  
 - **Spring Boot 3.4.12** - Framework para criação de aplicações Java modernas e escaláveis  
 - **MS SQLServer** - Banco de dados relacional para persistência das informações  
 - **Swagger (OpenAPI)** - Documentação e testes da API  
 - **Flyway** - Controle e versionamento de migrações do banco de dados  
 
-### 🔹 Frontend (pendente)
+### 🔹 Frontend (Atualizando)
 - **React** - Biblioteca para construção de interfaces de usuário  
 - **TypeScript** - Superset do JavaScript que adiciona tipagem estática  
 
