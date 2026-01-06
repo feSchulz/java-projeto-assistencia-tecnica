@@ -1,0 +1,16 @@
+footer {
+  background-color: #ffffff;   
+  color: #1e3a8a;              
+  text-align: center;
+  justify-content: baseline;
+  padding: 15px 0;
+  border-top: 1px solid #ebe9e9; 
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+}
+
+footer small {
+  display: block;
+  margin: 0;
+}
