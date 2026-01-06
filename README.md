@@ -18,10 +18,6 @@ Projeto de sistema web para gerenciamento de **ordens de serviço**, **clientes*
 ### 🔹 Frontend (Atualizando)
 - **React** - Biblioteca para construção de interfaces de usuário  
 - **TypeScript** - Superset do JavaScript que adiciona tipagem estática  
-
-### 🔹 Frontend (pendente)
-- **React**
-- **TypeScript**
 ---
 
 ## 🧩 Funcionalidades
