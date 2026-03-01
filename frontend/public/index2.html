@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard LOGOS</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f8f9fa; }
+
+        .container { display: flex; height: 100vh; }
+        .sidebar { width: 240px; background: #2563eb; color: white; padding: 20px 0; }
+        .logo { font-size: 24px; font-weight: bold; padding: 0 20px 30px; border-bottom: 1px solid #3b82f6; margin-bottom: 20px; }
+        .menu-item { display: flex; align-items: center; padding: 12px 20px; cursor: pointer; }
+        .menu-item:hover { background: #3b82f6; }
+        .menu-item.active { background: #1d4ed8; }
+        .menu-icon { margin-right: 12px; font-size: 20px; }
+
+        .main { flex: 1; padding: 24px; overflow-y: auto; }
+        .metrics { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; margin-bottom: 32px; }
+        .card { background: white; padding: 24px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+        .card h3 { color: #64748b; font-size: 14px; margin-bottom: 8px; }
+        .card .value { font-size: 32px; font-weight: bold; color: #1f2937; }
+        .card .change { font-size: 14px; color: #10b981; }
+
+        .table-section h2 { color: #1f2937; margin-bottom: 16px; font-size: 20px; }
+        table { width: 100%; background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+        th, td { padding: 16px; text-align: left; border-bottom: 1px solid #f1f5f9; }
+        th { background: #f8fafc; font-weight: 600; color: #64748b; }
+        .status { padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 500; }
+        .status.entregue { background: #dcfce7; color: #166534; }
+        .status.pendente { background: #fef3c7; color: #92400e; }
+        .btn { background: #2563eb; color: white; padding: 8px 16px; border-radius: 6px; border: none; cursor: pointer; font-size: 13px; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <aside class="sidebar">
+        <div class="logo">🛒 LOGOS</div>
+        <div class="menu-item active">
+            <span class="menu-icon">📊</span> Dashboard
+        </div>
+        <div class="menu-item">
+            <span class="menu-icon">📋</span> Pedidos
+        </div>
+        <div class="menu-item">
+            <span class="menu-icon">👥</span> Clientes
+        </div>
+        <div class="menu-item">
+            <span class="menu-icon">⚙️</span> Configurações
+        </div>
+    </aside>
+
+    <main class="main">
+        <div class="metrics">
+            <div class="card">
+                <h3>Pedidos do dia</h3>
+                <div class="value">24</div>
+                <div class="change">+12% vs ontem</div>
+            </div>
+            <div class="card">
+                <h3>Faturamento do mês</h3>
+                <div class="value">R$ 45.320</div>
+                <div class="change">+8%</div>
+            </div>
+            <div class="card">
+                <h3>Novos clientes</h3>
+                <div class="value">8</div>
+                <div class="change">+3</div>
+            </div>
+            <div class="card">
+                <h3>Pedidos pendentes</h3>
+                <div class="value">3</div>
+                <div class="change">-1</div>
+            </div>
+        </div>
+
+        <div class="table-section">
+            <h2>Últimos pedidos</h2>
+            <table>
+                <thead>
+                <tr>
+                    <th>Nº</th>
+                    <th>Cliente</th>
+                    <th>Data</th>
+                    <th>Status</th>
+                    <th>Total</th>
+                    <th>Ação</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>#1234</td>
+                    <td>João Silva</td>
+                    <td>04/02/2026</td>
+                    <td><span class="status entregue">Entregue</span></td>
+                    <td>R$ 1.250</td>
+                    <td><button class="btn">Ver</button></td>
+                </tr>
+                <tr>
+                    <td>#1233</td>
+                    <td>Maria Santos</td>
+                    <td>03/02/2026</td>
+                    <td><span class="status pendente">Pendente</span></td>
+                    <td>R$ 890</td>
+                    <td><button class="btn">Ver</button></td>
+                </tr>
+                <!-- mais linhas... -->
+                </tbody>
+            </table>
+        </div>
+    </main>
+</div>
+</body>
+</html>
