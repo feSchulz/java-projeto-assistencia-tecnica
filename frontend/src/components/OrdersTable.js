@@ -5,8 +5,8 @@ import {
   FaCalendar,
   FaCheckCircle,
   FaClock,
-  FaMoneyBill, // 💰 total
-  FaEye, // 👁️ ação
+  FaMoneyBill,
+  FaEye,
 } from "react-icons/fa";
 
 const orders = [
@@ -34,78 +34,112 @@ const orders = [
 ];
 
 const statusColors = {
-  entregue: "bg-green-100 text-green-800",
-  pendente: "bg-yellow-100 text-yellow-800",
+  entregue: "bg-green-50 text-green-700",
+  pendente: "bg-yellow-50 text-yellow-700",
 };
 
 const OrdersTable = () => (
-  <div>
-    <h2 className="text-2xl font-semibold text-gray-900 mb-4 flex items-center">
-      <FaClipboard className="mr-2 text-blue-600" size={24} /> Últimos pedidos
-    </h2>
-    <div className="bg-white rounded-xl shadow-sm overflow-hidden">
+  <section className="space-y-4">
+    {/* Header da seção */}
+    <div className="flex items-center justify-between">
+      <div className="flex items-center gap-2">
+        <div className="h-9 w-9 flex items-center justify-center rounded-full bg-blue-100 text-blue-700">
+          <FaClipboard className="text-base" />
+        </div>
+        <div>
+          <h2 className="text-lg font-semibold text-blue-900">
+            Últimos pedidos
+          </h2>
+          <p className="text-xs text-gray-500">
+            Visualize as últimas vendas registradas.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div className="bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden">
       <table className="w-full">
-        <thead>
-          <tr className="bg-gray-50">
-            <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              <FaClipboard className="inline mr-1 w-4 h-4" /> Nº
-            </th>
-            <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              <FaUser className="inline mr-1 w-4 h-4" /> Cliente
-            </th>
-            <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              <FaCalendar className="inline mr-1 w-4 h-4" /> Data
-            </th>
-            {/* Ícone de status */}
-            <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              <span className="flex items-center">
-                <FaCheckCircle className="mr-1 w-4 h-4" /> Status
+        <thead className="bg-blue-50">
+          <tr className="text-xs font-semibold text-blue-900">
+            <th className="px-4 py-3 text-left">
+              <span className="inline-flex items-center gap-1">
+                <FaClipboard className="w-3 h-3" />
+                <span>Nº pedido</span>
               </span>
             </th>
-            {/* Ícone de total */}
-            <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              <span className="flex items-center">
-                <FaMoneyBill className="mr-1 w-4 h-4" /> Total
+            <th className="px-4 py-3 text-left">
+              <span className="inline-flex items-center gap-1">
+                <FaUser className="w-3 h-3" />
+                <span>Cliente</span>
               </span>
             </th>
-            {/* Ícone de ação */}
-            <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              <span className="flex items-center">
-                <FaEye className="mr-1 w-4 h-4" /> Ação
+            <th className="px-4 py-3 text-left">
+              <span className="inline-flex items-center gap-1">
+                <FaCalendar className="w-3 h-3" />
+                <span>Data</span>
               </span>
+            </th>
+            <th className="px-4 py-3 text-left">
+              <span className="inline-flex items-center gap-1">
+                <FaCheckCircle className="w-3 h-3" />
+                <span>Status</span>
+              </span>
+            </th>
+            <th className="px-4 py-3 text-left">
+              <span className="inline-flex items-center gap-1">
+                <FaMoneyBill className="w-3 h-3" />
+                <span>Total</span>
+              </span>
+            </th>
+            {/* AÇÕES - ALINHADA À DIREITA */}
+            {/* HEADER - th da coluna Ações (EXATO igual ao botão) */}
+            <th className="px-4 py-3 text-right text-xs font-semibold text-blue-900">
+              <div className="inline-flex items-center gap-1 px-3 py-1.5 bg-blue-50 rounded-full text-blue-600">
+                <FaEye className="w-3 h-3" />
+                <span>Ações</span>
+              </div>
             </th>
           </tr>
         </thead>
-        <tbody>
+        <tbody className="divide-y divide-gray-100">
           {orders.map((order, index) => (
-            <tr key={index} className="hover:bg-gray-50">
-              <td className="px-6 py-4 text-sm font-medium text-gray-900">
+            <tr key={index} className="hover:bg-blue-50/60 transition-colors">
+              <td className="px-4 py-3 text-sm font-medium text-gray-900">
                 {order.id}
               </td>
-              <td className="px-6 py-4 text-sm text-gray-900">
+              <td className="px-4 py-3 text-sm text-gray-700">
                 {order.client}
               </td>
-              <td className="px-6 py-4 text-sm text-gray-900">{order.date}</td>
-              <td className="px-6 py-4">
+              <td className="px-4 py-3 text-sm text-gray-700">{order.date}</td>
+              <td className="px-4 py-3 text-sm">
                 <span
-                  className={`px-3 py-1 rounded-full text-xs font-medium flex items-center ${
-                    statusColors[order.status]
-                  }`}
+                  className={`
+                    inline-flex items-center px-2.5 py-1 rounded-full
+                    text-xs font-medium
+                    ${statusColors[order.status]}
+                  `}
                 >
                   {order.status === "entregue" ? (
-                    <FaCheckCircle className="mr-1 w-4 h-4" />
+                    <FaCheckCircle className="mr-1 w-3 h-3" />
                   ) : (
-                    <FaClock className="mr-1 w-4 h-4" />
+                    <FaClock className="mr-1 w-3 h-3" />
                   )}
                   {order.status === "entregue" ? "Entregue" : "Pendente"}
                 </span>
               </td>
-              <td className="px-6 py-4 text-sm font-medium text-gray-900">
+              <td className="px-4 py-3 text-sm font-semibold text-gray-900">
                 {order.total}
               </td>
-              <td className="px-6 py-4">
-                <button className="flex items-center bg-blue-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-blue-700 transition-colors">
-                  <FaEye className="mr-2 w-4 h-4" /> Ver
+              {/* AÇÕES - PERFEITAMENTE ALINHADA */}
+              {/* CORPO - td da coluna Ações (permanece igual) */}
+              <td className="px-4 py-3 text-right text-sm">
+                <button
+                className=" inline-flex items-center gap-1 px-3 py-1.5 rounded-full 
+                text-blue-600 bg-blue-50 hover:bg-blue-100
+                text-xs font-medium transition-colors "
+                >
+                  <FaEye className="w-3 h-3" />
+                  <span>Ver detalhes</span>
                 </button>
               </td>
             </tr>
@@ -113,7 +147,7 @@ const OrdersTable = () => (
         </tbody>
       </table>
     </div>
-  </div>
+  </section>
 );
 
 export default OrdersTable;

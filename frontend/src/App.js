@@ -1,44 +1,56 @@
+// App.js
 import "./App.css";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import React from "react";
 
-// Layout comum (Header + Navbar + Footer)
 import Header from "./components/Header";
-import Navbar from "./components/Navbar";
-import Footer from "./components/Footer";
+import Sidebar from "./components/Sidebar";
 
-// NOVA DASHBOARD (substitui a antiga Dashboard page)
-import Sidebar from './components/Sidebar';
-import MetricsGrid from './components/MetricsGrid';
-import OrdersTable from './components/OrdersTable';
+// Telas que você vai criar
+import Dashboard from "./pages/Dashboard/Dashboard.js";
+import OrdemServico from "./pages/OrdemServico/OrdemServico.js";
+import Clientes from "./pages/Clientes/Clientes.js";
+import Configuracoes from "./pages/Configuracoes/Configuracoes.js";
 
-// Telas
 import Login from "./pages/Auth/Login";
 
 function App() {
-    return (
-        <div className="App">
-            <BrowserRouter>
-                <Routes>
-                    {/* TELA 1: Login (SEM layout) */}
-                    <Route path="/login" element={<Login />} />
+  // Estado do menu ativo
+  const [activeMenuId, setActiveMenuId] = React.useState(1); // padrão: Dashboard
 
-                    {/* TELA 2: NOVA DASHBOARD HOME (COM layout completo) */}
-                    <Route path="/" element={
-                        <>
-                            <Header/>
-                            <div className="flex min-h-screen"> {/* Container flex para sidebar + main */}
-                                <Sidebar />
-                                <main className="flex-1 p-6 overflow-y-auto bg-gray-50">
-                                    <MetricsGrid />
-                                    <OrdersTable />
-                                </main>
-                            </div>                           
-                        </>
-                    } />
-                </Routes>
-            </BrowserRouter>
-        </div>
-    );
+  return (
+    <div className="App">
+      <BrowserRouter>
+        <Routes>
+          {/* Tela de login sem layout */}
+          <Route path="/login" element={<Login />} />
+
+          {/* Layout principal (com Header + Sidebar + Main) */}
+          <Route
+            path="/"
+            element={
+              <>
+                <Header />
+                <div className="flex min-h-screen">
+                  <Sidebar
+                    activeMenuId={activeMenuId}
+                    onMenuChange={setActiveMenuId}
+                  />
+                  <main className="flex-1 p-6 overflow-y-auto bg-gray-50">
+                    {/* Renderiza o componente baseado no menu ativo */}
+                    {activeMenuId === 1 && <Dashboard />}
+                    {activeMenuId === 2 && <OrdemServico />}
+                    {activeMenuId === 3 && <Clientes />}
+                    {activeMenuId === 4 && <Configuracoes />}
+                  </main>
+                </div>
+              </>
+            }
+          />
+        </Routes>
+      </BrowserRouter>
+    </div>
+  );
 }
 
 export default App;
