@@ -1,0 +1,6 @@
+/* Login.css - APENAS IMPORT TAILWIND */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Se quiser customizações extras, adicione aqui */

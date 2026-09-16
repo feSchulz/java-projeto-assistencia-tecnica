@@ -1,30 +1,24 @@
-export const api = "http://localhost:8080/api";
-
+export const api = "http://localhost:8080/api/auth/v1";
 
 export const requestConfig = (method, data, token, image) => {
-    let config;
-    if (image) {
-        config = {
-            method: method,
-            body: data,
-            headers: { Authorization: token ? `Bearer ${token}` : "" },
-        };
-    } else if (method === "DELETE" || data === null) {
-        config = {
-            method: method,
-            headers: {
-                Authorization: token ? `Bearer ${token}` : "",
-            },
-        };
-    } else {
-        config = {
-            method: method,
-            body: JSON.stringify(data),
-            headers: {
-                "Content-Type": "application/json",
-                Authorization: token ? `Bearer ${token}` : "",
-            },
-        };
+    const headers = {};
+
+    if (token) {
+        headers.Authorization = `Bearer ${token}`;
     }
-    return config;
+
+    if (image) {
+        return { method, body: data, headers };
+    }
+
+    if (method === "DELETE" || data == null) {
+        return { method, headers };
+    }
+
+    headers["Content-Type"] = "application/json";
+    return {
+        method,
+        headers,
+        body: JSON.stringify(data),
+    };
 };
