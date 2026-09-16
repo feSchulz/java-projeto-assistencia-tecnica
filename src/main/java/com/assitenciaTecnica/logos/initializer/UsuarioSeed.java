@@ -1,5 +1,6 @@
 package com.assitenciaTecnica.logos.initializer;
 
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import com.assitenciaTecnica.logos.model.Funcionario;
 import com.assitenciaTecnica.logos.model.Papel;
@@ -13,13 +14,16 @@ public class UsuarioSeed {
     private final UsuarioRepository usuarioRepository;
     private final FuncionarioRepository funcionarioRepository;
     private final PapelRepository papelRepository;
+    private final PasswordEncoder passwordEncoder;
 
     public UsuarioSeed(UsuarioRepository usuarioRepository,
                        FuncionarioRepository funcionarioRepository,
-                       PapelRepository papelRepository) {
+                       PapelRepository papelRepository,
+                       PasswordEncoder passwordEncoder) {
         this.usuarioRepository = usuarioRepository;
         this.funcionarioRepository = funcionarioRepository;
         this.papelRepository = papelRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public void seed() {
@@ -30,13 +34,12 @@ public class UsuarioSeed {
             usuarioAdm.setEmail("admin@sistema.com");
             usuarioAdm.setTelefone("000000000");
 
-
             Papel admin = papelRepository.findByCodigo("adm");
 
             Funcionario funcionarioAdm = new Funcionario();
             funcionarioAdm.setUsuario(usuarioAdm);
             funcionarioAdm.setLogin("adm");
-            funcionarioAdm.setSenha("123");
+            funcionarioAdm.setSenha(passwordEncoder.encode("123")); // grava o hash, não "123" puro
             funcionarioAdm.setPapel(admin);
 
             funcionarioRepository.save(funcionarioAdm);

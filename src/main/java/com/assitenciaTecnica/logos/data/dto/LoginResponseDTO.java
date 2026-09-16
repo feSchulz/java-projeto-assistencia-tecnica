@@ -4,6 +4,7 @@ public class LoginResponseDTO {
     private String mensagem;
     private String papel;
     private Long usuarioId;
+    private String token;
 
     public LoginResponseDTO(String mensagem, String papel, Long usuarioId) {
         this.mensagem = mensagem;
@@ -11,24 +12,12 @@ public class LoginResponseDTO {
         this.usuarioId = usuarioId;
     }
 
-    public String getMensagem() {
-        return mensagem;
-    }
-    public void setMensagem(String mensagem) {
-        this.mensagem = mensagem;
-    }
-
-    public String getPapel() {
-        return papel;
-    }
-    public void setPapel(String papel) {
-        this.papel = papel;
-    }
-
-    public Long getUsuarioId() {
-        return usuarioId;
-    }
-    public void setUsuarioId(Long usuarioId) {
-        this.usuarioId = usuarioId;
-    }
+    public String getMensagem() { return mensagem; }
+    public void setMensagem(String mensagem) { this.mensagem = mensagem; }
+    public String getPapel() { return papel; }
+    public void setPapel(String papel) { this.papel = papel; }
+    public Long getUsuarioId() { return usuarioId; }
+    public void setUsuarioId(Long usuarioId) { this.usuarioId = usuarioId; }
+    public String getToken() { return token; }
+    public void setToken(String token) { this.token = token; }
 }

@@ -1,23 +1,47 @@
 import React, { useState } from "react";
-// import './Login.css';  ← COMENTE ou DELETE esta linha
-import { useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
-import { loginSuccess } from "../../slice/authSlice";
-import * as authService from "../../services/AuthService";
+import { useNavigate, Navigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { loginSuccess } from "../../store/authSlice";
+import * as authService from "../../services/AuthService.js";
 
 const Login = () => {
     const dispatch = useDispatch();
-    const [identifier, setIdentifier] = useState("");
+    const navigate = useNavigate();
+    const { isAuthenticated } = useSelector((state) => state.auth);
+
+    const [login, setLogin] = useState("");
     const [password, setPassword] = useState("");
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
-    const navigate = useNavigate();
+
+    if (isAuthenticated) {
+        return <Navigate to="/app" replace />;
+    }
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         setError("");
+
+        if (!login || !password) {
+            setError("Preencha usuário/e-mail e senha.");
+            return;
+        }
+
         setLoading(true);
-        navigate("/", { replace: true }); // <- vai pro dashboard
+
+        try {
+
+            const data = await authService.login({ login, password });
+            dispatch(loginSuccess({
+                user: { papel: data.papel, usuarioId: data.usuarioId },
+                token: data.token,
+            }));
+            navigate("/app", { replace: true });
+        } catch (err) {
+            setError(err.message || "Erro ao fazer login.");
+        } finally {
+            setLoading(false);
+        }
     };
 
     return (
@@ -28,18 +52,20 @@ const Login = () => {
                     alt="Logos ERP"
                     className="mx-auto h-32 w-auto mb-6"
                 />
-                <h2 className="text-2xl font-bold text-center text-blue-600 mb-6">
-                    Bem-vindo ao Logos
-                </h2>
 
-                <form className="space-y-4" onSubmit={handleSubmit}>
+        {/*        <h2 className="text-2xl font-bold text-center text-blue-600 mb-6">
+                    Bem-vindo ao Logos
+                </h2>*/}
+
+                <form className="space-y-4 text-black mb-6" onSubmit={handleSubmit}>
                     <input
                         type="text"
                         placeholder="Usuário ou E-mail"
-                        value={identifier}
-                        onChange={(e) => setIdentifier(e.target.value)}
+                        value={login}
+                        onChange={(e) => setLogin(e.target.value)}
                         className="w-full px-4 py-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                     />
+
                     <input
                         type="password"
                         placeholder="Senha"

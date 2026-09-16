@@ -14,10 +14,12 @@ Projeto de sistema web para gerenciamento de **ordens de serviço**, **clientes*
 - **MS SQLServer** - Banco de dados relacional para persistência das informações
 - **Swagger (OpenAPI)** - Documentação e testes da API
 - **Flyway** - Controle e versionamento de migrações do banco de dados
+- **Spring Security + JWT** - Autenticação e autorização stateless via token
 
-### 🔹 Frontend
+### 🔹 Frontend (v1)
 - **React** - Biblioteca para construção de interfaces de usuário
 - **Tailwind CSS** - Framework de utilidades para estilização rápida com classes de baixo nível
+- **Redux Toolkit** - Gerenciamento do estado de autenticação no front-end
 
 ---
 
@@ -30,3 +32,7 @@ Projeto de sistema web para gerenciamento de **ordens de serviço**, **clientes*
 - 📊 Geração de relatórios
 
 ---
+
+## 🔐 Autenticação
+
+A API usa **JWT (JSON Web Token)** para autenticação, com sessão **stateless** (o backend não guarda estado de login entre requisições — cada uma se autentica sozinha através do token).

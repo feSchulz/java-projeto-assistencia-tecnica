@@ -1,9 +1,10 @@
 // src/services/authService.js
-import { api, requestConfig } from "../utils/config"; 
+import { api, requestConfig } from "../utils/config";
 
-export const login = async ({ identifier, password }) => {
-  const config = requestConfig("POST", { identifier, password });
+export const login = async ({ login, password }) => {
 
+  const config = requestConfig("POST", { login, password });
+  console.log(config);
   const response = await fetch(`${api}/login`, config);
 
   if (!response.ok) {
@@ -13,21 +14,18 @@ export const login = async ({ identifier, password }) => {
 
   const data = await response.json();
 
-  // se vier token, salva no localStorage
   if (data.token) {
     localStorage.setItem("token", data.token);
-    }
-    
-    
+  }
 
-  return data; // ex: { user, token }
+  return data;
 };
-
 
 export const logout = async (token) => {
-  const config = requestConfig("POST", null, token); 
-  await fetch(`${api}/logout`, config);
-  localStorage.removeItem("token");
-  
+  try {
+    const config = requestConfig("POST", null, token);
+    await fetch(`${api}/logout`, config);
+  } finally {
+    localStorage.removeItem("token");
+  }
 };
-
