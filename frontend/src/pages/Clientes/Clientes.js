@@ -1,30 +1,33 @@
 import React, { useState } from "react";
 import { FiPlus, FiSearch, FiEye, FiTrash2, FiUsers } from "react-icons/fi";
+import ClienteFormModal from "../../components/ClienteFormModal";
 
 const initialCustomers = [
   {
     id: 1,
     name: "João Silva",
     cpf: "123.456.789-00",
-    email: "[email protected]",
+    email: "teste@gmail.com",
   },
   {
     id: 2,
     name: "Maria Souza",
     cpf: "987.654.321-00",
-    email: "[email protected]",
+    email: "teste2@gmail.com",
   },
   {
     id: 3,
     name: "Pedro Oliveira",
     cpf: "111.222.333-44",
-    email: "[email protected]",
+    email: "teste3@gmail.com",
   },
 ];
 
 const Clientes = () => {
   const [customers, setCustomers] = useState(initialCustomers);
   const [search, setSearch] = useState("");
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [feedback, setFeedback] = useState("");
 
   const filteredCustomers = customers.filter(
     (c) =>
@@ -33,8 +36,12 @@ const Clientes = () => {
   );
 
   const handleAddCustomer = () => {
-    // abrir modal ou navegar para página de cadastro
-    alert("Abrir formulário de cadastro de cliente");
+    setFeedback("");
+    setIsModalOpen(true);
+  };
+
+  const handleClienteCriado = () => {
+    setFeedback("Cliente cadastrado com sucesso.");
   };
 
   const handleRemoveCustomer = (id) => {
@@ -72,6 +79,12 @@ const Clientes = () => {
           <span>Cadastrar cliente</span>
         </button>
       </div>
+
+      {feedback && (
+          <div className="rounded-md border border-green-100 bg-green-50 px-4 py-2 text-sm text-green-700">
+            {feedback}
+          </div>
+      )}
 
       {/* Barra de busca */}
       <div className="flex items-center gap-3">
@@ -155,6 +168,11 @@ const Clientes = () => {
           )}
         </div>
       </div>
+      <ClienteFormModal
+          isOpen={isModalOpen}
+          onClose={() => setIsModalOpen(false)}
+          onCreated={handleClienteCriado}
+      />
     </section>
   );
 };

@@ -1,5 +1,5 @@
 export const api = "http://localhost:8080/api/auth/v1";
-
+export const apiBase = "http://localhost:8080/api";
 export const requestConfig = (method, data, token, image) => {
     const headers = {};
 
