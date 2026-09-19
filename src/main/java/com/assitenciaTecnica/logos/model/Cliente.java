@@ -17,7 +17,7 @@ public class Cliente {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	@OneToOne
+	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "usuario_id", nullable = false) // FK na tabela cliente
 	private Usuario usuario;
 

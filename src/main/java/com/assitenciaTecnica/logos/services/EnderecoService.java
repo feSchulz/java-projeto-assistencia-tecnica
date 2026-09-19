@@ -37,5 +37,10 @@ public class EnderecoService {
         }
         return new ArrayList<CidadeDTO>();
     }
+    public CidadeDTO buscarCidadesById(Long idCidade) {
+        Cidade cidade = cidadeRepository.findById(idCidade)
+                .orElseThrow(() -> new RuntimeException("Cidade não encontrada"));
+        return ObjectMapper.parseObject(cidade, CidadeDTO.class);
+    }
 
 }

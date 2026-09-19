@@ -264,7 +264,7 @@ const ClienteFormModal = ({ isOpen, onClose, onCreated }) => {
                                 </option>
                                 {cidades.map((cidade) => (
                                     <option key={cidade.id} value={cidade.id}>
-                                        {cidade.cidade}
+                                        {cidade.nome}
                                     </option>
                                 ))}
                             </select>

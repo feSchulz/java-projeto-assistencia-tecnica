@@ -7,8 +7,12 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import com.assitenciaTecnica.logos.controllers.docs.ClienteControllerDocs;
+import com.assitenciaTecnica.logos.data.dto.CidadeDTO;
 import com.assitenciaTecnica.logos.data.dto.ClienteDTO;
+import com.assitenciaTecnica.logos.mapper.ObjectMapper;
+import com.assitenciaTecnica.logos.model.Cidade;
 import com.assitenciaTecnica.logos.services.ClienteService;
+import com.assitenciaTecnica.logos.services.EnderecoService;
 
 @RestController
 @RequestMapping("/api/clientes/v1")
@@ -17,7 +21,8 @@ public class ClienteController implements ClienteControllerDocs {
 
     @Autowired
     private ClienteService clienteService;
-
+    @Autowired
+    private EnderecoService enderecoService;   // ← 1. adicionar este campo
     // Criar cliente
     @PostMapping(consumes = {
             MediaType.APPLICATION_JSON_VALUE,
@@ -30,6 +35,9 @@ public class ClienteController implements ClienteControllerDocs {
     @Override
     public ResponseEntity<String> createCliente(@RequestBody ClienteDTO clienteDTO) {
         try {
+            CidadeDTO cidade = enderecoService.buscarCidadesById(   // ← 2. usar o campo, não "new EnderecoService()"
+                    clienteDTO.getPessoa().getEndereco().getCidade().getId());
+            clienteDTO.getPessoa().getEndereco().setCidade(ObjectMapper.parseObject(cidade, Cidade.class));
             clienteService.salvar(clienteDTO);
             return ResponseEntity.ok("Cliente cadastrado com sucesso");
         } catch (Exception e) {

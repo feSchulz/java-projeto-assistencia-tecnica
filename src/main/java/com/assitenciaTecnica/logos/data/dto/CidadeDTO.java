@@ -5,7 +5,7 @@ import com.assitenciaTecnica.logos.model.Estado;
 
 public class CidadeDTO {
 	private Long id;
-	private String cidade;
+	private String nome;
 
 	public Long getId() {
 		return id;
@@ -15,12 +15,12 @@ public class CidadeDTO {
 		this.id = id;
 	}
 
-	public String getCidade() {
-		return cidade;
+	public String getNome() {
+		return nome;
 	}
 
-	public void setCidade(String cidade) {
-		this.cidade = cidade;
+	public void setNome(String nome) {
+		this.nome = nome;
 	}
 
 
