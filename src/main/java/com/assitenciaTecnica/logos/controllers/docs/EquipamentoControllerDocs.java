@@ -2,12 +2,15 @@ package com.assitenciaTecnica.logos.controllers.docs;
 
 import com.assitenciaTecnica.logos.data.dto.EquipamentoDTO;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
+
+import java.util.List;
 
 public interface EquipamentoControllerDocs {
 
@@ -47,5 +50,40 @@ public interface EquipamentoControllerDocs {
     )
     ResponseEntity<String> atualizar(@RequestBody EquipamentoDTO equipamentoDTO);
 
+    @Operation(summary = "Listar Equipamentos",
+            description = "Retorna todos os equipamentos cadastrados",
+            tags = {"Equipamento"},
+            responses = {
+                    @ApiResponse(description = "Sucesso", responseCode = "200",
+                            content = @Content(array = @ArraySchema(schema = @Schema(implementation = EquipamentoDTO.class)))),
+                    @ApiResponse(description = "Nenhum conteúdo", responseCode = "204", content = @Content),
+                    @ApiResponse(description = "Erro interno", responseCode = "500", content = @Content)
+            }
+    )
+    ResponseEntity<List<EquipamentoDTO>> getAllEquipamentos();
+
+    @Operation(summary = "Listar Equipamentos por Cliente",
+            description = "Retorna todos os equipamentos de um cliente específico",
+            tags = {"Equipamento"},
+            responses = {
+                    @ApiResponse(description = "Sucesso", responseCode = "200",
+                            content = @Content(array = @ArraySchema(schema = @Schema(implementation = EquipamentoDTO.class)))),
+                    @ApiResponse(description = "Nenhum conteúdo", responseCode = "204", content = @Content),
+                    @ApiResponse(description = "Erro interno", responseCode = "500", content = @Content)
+            }
+    )
+    ResponseEntity<List<EquipamentoDTO>> getEquipamentosByCliente(@PathVariable Long clienteId);
+
+    @Operation(summary = "Excluir Equipamento",
+            description = "Remove um equipamento existente pelo ID",
+            tags = {"Equipamento"},
+            responses = {
+                    @ApiResponse(description = "Sucesso", responseCode = "200",
+                            content = @Content(schema = @Schema(implementation = String.class))),
+                    @ApiResponse(description = "Erro de requisição", responseCode = "400", content = @Content),
+                    @ApiResponse(description = "Erro interno", responseCode = "500", content = @Content)
+            }
+    )
+    ResponseEntity<String> deletar(@PathVariable Long id);
 
 }

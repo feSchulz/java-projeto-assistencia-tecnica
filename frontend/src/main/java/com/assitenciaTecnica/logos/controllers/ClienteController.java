@@ -1,0 +1,128 @@
+package com.assitenciaTecnica.logos.controllers;
+
+import io.swagger.v3.oas.annotations.tags.Tag;
+import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import com.assitenciaTecnica.logos.controllers.docs.ClienteControllerDocs;
+import com.assitenciaTecnica.logos.data.dto.CidadeDTO;
+import com.assitenciaTecnica.logos.data.dto.ClienteDTO;
+import com.assitenciaTecnica.logos.mapper.ObjectMapper;
+import com.assitenciaTecnica.logos.model.Cidade;
+import com.assitenciaTecnica.logos.services.ClienteService;
+import com.assitenciaTecnica.logos.services.EnderecoService;
+
+@RestController
+@RequestMapping("/api/clientes/v1")
+@Tag(name = "Cliente", description = "Endpoints para gerenciamento de Clientes")
+public class ClienteController implements ClienteControllerDocs {
+
+    @Autowired
+    private ClienteService clienteService;
+    @Autowired
+    private EnderecoService enderecoService;   // ← 1. adicionar este campo
+    // Criar cliente
+    @PostMapping(consumes = {
+            MediaType.APPLICATION_JSON_VALUE,
+            MediaType.APPLICATION_XML_VALUE,
+            MediaType.APPLICATION_YAML_VALUE},
+            produces = {
+                    MediaType.APPLICATION_JSON_VALUE,
+                    MediaType.APPLICATION_XML_VALUE,
+                    MediaType.APPLICATION_YAML_VALUE})
+    @Override
+    public ResponseEntity<String> createCliente(@RequestBody ClienteDTO clienteDTO) {
+        try {
+            CidadeDTO cidade = enderecoService.buscarCidadesById(   // ← 2. usar o campo, não "new EnderecoService()"
+                    clienteDTO.getPessoa().getEndereco().getCidade().getId());
+            clienteDTO.getPessoa().getEndereco().setCidade(ObjectMapper.parseObject(cidade, Cidade.class));
+            clienteService.salvar(clienteDTO);
+            return ResponseEntity.ok("Cliente cadastrado com sucesso");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.badRequest().body("Erro ao cadastrar cliente");
+        }
+    }
+
+    // Listar todos os clientes
+    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+    @Override
+    public  ResponseEntity<List<ClienteDTO>> getAllClientes() {
+        try {
+            List<ClienteDTO> clientes = clienteService.findAll();
+            return ResponseEntity.ok(clientes);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.internalServerError().build();
+        }
+    }
+
+    // Buscar clientes por nome (query param)
+    @GetMapping(params = "nome", produces = MediaType.APPLICATION_JSON_VALUE)
+    @Override
+    public ResponseEntity<List<ClienteDTO>> getClientesByName(@RequestParam String nome) {
+        try {
+            List<ClienteDTO> clientes = clienteService.buscar(nome);
+            return ResponseEntity.ok(clientes);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.internalServerError().build();
+        }
+    }
+
+    // Buscar cliente por ID
+    @GetMapping("/{id}")
+    @Override
+    public ResponseEntity<ClienteDTO> getClienteById(@PathVariable Long id) {
+        try {
+            ClienteDTO cliente = clienteService.buscarPorId(id);
+            return ResponseEntity.ok(cliente);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.internalServerError().build();
+        }
+    }
+
+    // Atualizar cliente
+    @PutMapping( consumes = {
+            MediaType.APPLICATION_JSON_VALUE,
+            MediaType.APPLICATION_XML_VALUE,
+            MediaType.APPLICATION_YAML_VALUE},
+            produces = {
+                    MediaType.APPLICATION_JSON_VALUE,
+                    MediaType.APPLICATION_XML_VALUE,
+                    MediaType.APPLICATION_YAML_VALUE})
+    @Override
+    public ResponseEntity<String> updateCliente( @RequestBody ClienteDTO clienteDTO) {
+        try {
+            if (clienteDTO.getPessoa() != null
+                    && clienteDTO.getPessoa().getEndereco() != null
+                    && clienteDTO.getPessoa().getEndereco().getCidade() != null
+                    && clienteDTO.getPessoa().getEndereco().getCidade().getId() != null) {
+                CidadeDTO cidade = enderecoService.buscarCidadesById(
+                        clienteDTO.getPessoa().getEndereco().getCidade().getId());
+                clienteDTO.getPessoa().getEndereco().setCidade(ObjectMapper.parseObject(cidade, Cidade.class));
+            }
+            clienteService.atualizar(clienteDTO);
+            return ResponseEntity.ok("Cliente editado com sucesso");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.badRequest().body("Erro ao editar cliente");
+        }
+    }
+
+    // Excluir cliente
+    @DeleteMapping("/{id}")
+    @Override
+    public ResponseEntity<String> deleteCliente(@PathVariable Long id) {
+        try {
+            clienteService.deletar(id);
+            return ResponseEntity.ok("Cliente excluído com sucesso");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.badRequest().body("Erro ao excluir cliente");
+        }
+    }
+}

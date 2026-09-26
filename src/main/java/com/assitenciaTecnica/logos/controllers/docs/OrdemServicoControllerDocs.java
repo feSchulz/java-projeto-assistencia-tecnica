@@ -57,4 +57,37 @@ public interface OrdemServicoControllerDocs {
                     @ApiResponse(responseCode = "500", description = "Erro interno", content = @Content)
             })
     ResponseEntity<List<OrdemServicoDTO>> getAllOrdensServico();
+
+    @Operation(summary = "Buscar Ordens de Serviço por Cliente",
+            description = "Retorna todas as ordens de serviço de um cliente específico",
+            tags = {"OrdemServico"},
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Sucesso",
+                            content = @Content(array = @ArraySchema(schema = @Schema(implementation = OrdemServicoDTO.class)))),
+                    @ApiResponse(responseCode = "204", description = "Nenhum conteúdo", content = @Content),
+                    @ApiResponse(responseCode = "500", description = "Erro interno", content = @Content)
+            })
+    ResponseEntity<List<OrdemServicoDTO>> getOrdensServicoByCliente(@PathVariable Long clienteId);
+
+    @Operation(summary = "Buscar Ordens de Serviço por Status",
+            description = "Retorna todas as ordens de serviço com o status informado (0=ABERTA, 1=EM_ANDAMENTO, 2=CONCLUIDA, 3=CANCELADA)",
+            tags = {"OrdemServico"},
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Sucesso",
+                            content = @Content(array = @ArraySchema(schema = @Schema(implementation = OrdemServicoDTO.class)))),
+                    @ApiResponse(responseCode = "204", description = "Nenhum conteúdo", content = @Content),
+                    @ApiResponse(responseCode = "500", description = "Erro interno", content = @Content)
+            })
+    ResponseEntity<List<OrdemServicoDTO>> getOrdensServicoByStatus(@PathVariable Long status);
+
+    @Operation(summary = "Excluir Ordem de Serviço",
+            description = "Remove uma ordem de serviço existente pelo ID",
+            tags = {"OrdemServico"},
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Sucesso",
+                            content = @Content(schema = @Schema(implementation = String.class))),
+                    @ApiResponse(responseCode = "400", description = "Erro de requisição", content = @Content),
+                    @ApiResponse(responseCode = "500", description = "Erro interno", content = @Content)
+            })
+    ResponseEntity<String> deleteOrdemServico(@PathVariable Long id);
 }

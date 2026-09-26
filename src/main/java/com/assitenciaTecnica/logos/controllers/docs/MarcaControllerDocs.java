@@ -74,4 +74,16 @@ public interface MarcaControllerDocs {
     )
     ResponseEntity<String> updateMarca(@RequestBody MarcaDTO marcaDTO);
 
+    @Operation(summary = "Excluir Marca",
+            description = "Remove uma marca existente pelo ID",
+            tags = {"Marca"},
+            responses = {
+                    @ApiResponse(description = "Sucesso", responseCode = "200",
+                            content = @Content(schema = @Schema(implementation = String.class))),
+                    @ApiResponse(description = "Erro de requisição", responseCode = "400", content = @Content),
+                    @ApiResponse(description = "Erro interno", responseCode = "500", content = @Content)
+            }
+    )
+    ResponseEntity<String> deleteMarca(@PathVariable Long id);
+
 }

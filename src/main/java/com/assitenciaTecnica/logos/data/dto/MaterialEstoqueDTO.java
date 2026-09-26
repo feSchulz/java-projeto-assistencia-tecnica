@@ -7,6 +7,8 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import java.math.BigDecimal;
+import com.assitenciaTecnica.logos.model.Marca;
+import com.assitenciaTecnica.logos.model.Modelo;
 import com.assitenciaTecnica.logos.model.enums.StatusMaterial;
 
 public class MaterialEstoqueDTO {
@@ -15,9 +17,27 @@ public class MaterialEstoqueDTO {
     private String nome;
     private String codigo;
     private String descricao;
+    private Marca marca;
+    private Modelo modelo;
     private Long quantidadeEstoque;
     private BigDecimal valorUnitario;
     private StatusMaterial status;
+
+    public Marca getMarca() {
+        return marca;
+    }
+
+    public void setMarca(Marca marca) {
+        this.marca = marca;
+    }
+
+    public Modelo getModelo() {
+        return modelo;
+    }
+
+    public void setModelo(Modelo modelo) {
+        this.modelo = modelo;
+    }
 
     public Long getId() {
         return id;

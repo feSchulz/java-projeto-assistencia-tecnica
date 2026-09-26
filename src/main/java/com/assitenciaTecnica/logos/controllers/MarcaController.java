@@ -86,4 +86,17 @@ public class MarcaController implements MarcaControllerDocs {
 			return ResponseEntity.badRequest().body("Erro ao atualizar a marca");
 		}
 	}
+
+	// Excluir marca
+	@DeleteMapping("/{id}")
+	@Override
+	public ResponseEntity<String> deleteMarca(@PathVariable Long id) {
+		try {
+			marcaService.deletar(id);
+			return ResponseEntity.ok("Marca excluída com sucesso");
+		} catch (Exception e) {
+			e.printStackTrace();
+			return ResponseEntity.badRequest().body("Erro ao excluir a marca");
+		}
+	}
 }

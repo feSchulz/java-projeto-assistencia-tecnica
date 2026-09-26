@@ -28,7 +28,8 @@ public class ClienteService {
     }
 
     public ClienteDTO buscarPorId(Long id) {
-        Optional<Cliente> cliente = clienteRepository.findById(id);
+        Cliente cliente = clienteRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Cliente não encontrado"));
         return ObjectMapper.parseObject(cliente, ClienteDTO.class);
     }
 
@@ -41,5 +42,11 @@ public class ClienteService {
     public List<ClienteDTO> findAll() {
         List<Cliente> modelCliente = clienteRepository.findAll();
         return ObjectMapper.parseListObjects(modelCliente, ClienteDTO.class);
+    }
+
+    public void deletar(Long id) {
+        Cliente cliente = clienteRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Cliente não encontrado"));
+        clienteRepository.delete(cliente);
     }
 }

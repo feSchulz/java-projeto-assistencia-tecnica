@@ -97,11 +97,32 @@ public class ClienteController implements ClienteControllerDocs {
     @Override
     public ResponseEntity<String> updateCliente( @RequestBody ClienteDTO clienteDTO) {
         try {
+            if (clienteDTO.getPessoa() != null
+                    && clienteDTO.getPessoa().getEndereco() != null
+                    && clienteDTO.getPessoa().getEndereco().getCidade() != null
+                    && clienteDTO.getPessoa().getEndereco().getCidade().getId() != null) {
+                CidadeDTO cidade = enderecoService.buscarCidadesById(
+                        clienteDTO.getPessoa().getEndereco().getCidade().getId());
+                clienteDTO.getPessoa().getEndereco().setCidade(ObjectMapper.parseObject(cidade, Cidade.class));
+            }
             clienteService.atualizar(clienteDTO);
             return ResponseEntity.ok("Cliente editado com sucesso");
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.badRequest().body("Erro ao editar cliente");
+        }
+    }
+
+    // Excluir cliente
+    @DeleteMapping("/{id}")
+    @Override
+    public ResponseEntity<String> deleteCliente(@PathVariable Long id) {
+        try {
+            clienteService.deletar(id);
+            return ResponseEntity.ok("Cliente excluído com sucesso");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.badRequest().body("Erro ao excluir cliente");
         }
     }
 }

@@ -1,55 +1,90 @@
-import React, { useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
+import { FiFileText, FiSearch, FiEye, FiTool, FiPlusCircle, FiTrash2 } from "react-icons/fi";
+import { useSelector } from "react-redux";
+import OrdemServicoFormModal from "../../components/OrdemServicoFormModal";
+import OrdemServicoDetalheModal from "../../components/OrdemServicoDetalheModal";
 import {
-  FiFileText,
-  FiSearch,
-  FiEye,
-  FiTool,
-  FiPlusCircle,
-} from "react-icons/fi";
+  listarOrdensServico,
+  listarOrdensServicoPorStatus,
+  excluirOrdemServico,
+  statusLabel,
+  STATUS_OS,
+} from "../../services/OrdemServicoService";
 
-const initialOrders = [
-  {
-    id: 101,
-    customer: "João Silva",
-    device: "Notebook Dell",
-    status: "Em análise",
-    createdAt: "15/03/2026",
-  },
-  {
-    id: 102,
-    customer: "Maria Souza",
-    device: "Smartphone Samsung",
-    status: "Aguardando peça",
-    createdAt: "14/03/2026",
-  },
-  {
-    id: 103,
-    customer: "Pedro Oliveira",
-    device: "Impressora HP",
-    status: "Concluída",
-    createdAt: "10/03/2026",
-  },
-];
+const pillClasses = (status) => {
+  const label = statusLabel(status);
+  if (label === "Concluída") return "bg-green-50 text-green-700";
+  if (label === "Cancelada") return "bg-red-50 text-red-700";
+  if (label === "Em andamento") return "bg-orange-50 text-orange-700";
+  return "bg-blue-50 text-blue-700"; // Aberta
+};
 
 const OrdemServico = () => {
-  const [orders, setOrders] = useState(initialOrders);
-  const [search, setSearch] = useState("");
+  const { token } = useSelector((state) => state.auth);
 
-  const filteredOrders = orders.filter(
-    (o) =>
+  const [orders, setOrders] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [search, setSearch] = useState("");
+  const [statusFiltro, setStatusFiltro] = useState("");
+  const [isFormOpen, setIsFormOpen] = useState(false);
+  const [osSelecionada, setOsSelecionada] = useState(null);
+  const [feedback, setFeedback] = useState("");
+  const [error, setError] = useState("");
+
+  const carregarOrdens = useCallback(() => {
+    setLoading(true);
+    setError("");
+
+    const requisicao = statusFiltro
+      ? listarOrdensServicoPorStatus(
+          STATUS_OS.find((s) => s.nome === statusFiltro)?.codigo ?? 0,
+          token,
+        )
+      : listarOrdensServico(token);
+
+    requisicao
+      .then(setOrders)
+      .catch((err) => setError(err.message || "Não foi possível carregar as ordens de serviço."))
+      .finally(() => setLoading(false));
+  }, [statusFiltro, token]);
+
+  useEffect(() => {
+    carregarOrdens();
+  }, [carregarOrdens]);
+
+  const filteredOrders = orders.filter((o) => {
+    const termo = search.toLowerCase();
+    return (
       String(o.id).includes(search) ||
-      o.customer.toLowerCase().includes(search.toLowerCase()) ||
-      o.device.toLowerCase().includes(search.toLowerCase()),
-  );
+      (o.cliente?.pessoa?.nome || "").toLowerCase().includes(termo) ||
+      (o.equipamento?.equipamento || "").toLowerCase().includes(termo)
+    );
+  });
 
   const handleNewOrder = () => {
-    // Aqui você abre um modal ou navega para /os/nova
-    alert("Abrir formulário de nova Ordem de Serviço (OS)");
+    setFeedback("");
+    setIsFormOpen(true);
   };
 
-  const handleViewOrder = (id) => {
-    // Navegar para detalhes ou abrir modal
-    alert(`Visualizar detalhes da OS #${id}`);
+  const handleOrdemCriada = () => {
+    setFeedback("Ordem de serviço cadastrada com sucesso.");
+    carregarOrdens();
+  };
+
+  const handleViewOrder = (os) => {
+    setOsSelecionada(os);
+  };
+
+  const handleRemoveOrder = async (os) => {
+    if (!window.confirm(`Excluir a OS #${os.id}? Essa ação não pode ser desfeita.`)) return;
+
+    try {
+      await excluirOrdemServico(os.id, token);
+      setFeedback(`OS #${os.id} excluída com sucesso.`);
+      carregarOrdens();
+    } catch (err) {
+      setError(err.message || "Não foi possível excluir a ordem de serviço.");
+    }
   };
 
   return (
@@ -86,7 +121,18 @@ const OrdemServico = () => {
         </button>
       </div>
 
-      {/* Barra de busca */}
+      {feedback && (
+        <div className="rounded-md border border-green-100 bg-green-50 px-4 py-2 text-sm text-green-700">
+          {feedback}
+        </div>
+      )}
+      {error && (
+        <div className="rounded-md border border-red-100 bg-red-50 px-4 py-2 text-sm text-red-700">
+          {error}
+        </div>
+      )}
+
+      {/* Barra de busca + filtro de status */}
       <div className="flex items-center gap-3">
         <div className="relative flex-1">
           <FiSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm" />
@@ -105,6 +151,18 @@ const OrdemServico = () => {
             "
           />
         </div>
+        <select
+          value={statusFiltro}
+          onChange={(e) => setStatusFiltro(e.target.value)}
+          className="rounded-md border border-gray-200 bg-white px-3 py-2 text-sm text-gray-700 shadow-sm focus:border-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-400"
+        >
+          <option value="">Todos os status</option>
+          {STATUS_OS.map((s) => (
+            <option key={s.nome} value={s.nome}>
+              {s.label}
+            </option>
+          ))}
+        </select>
       </div>
 
       {/* Card/Tabela */}
@@ -120,7 +178,11 @@ const OrdemServico = () => {
 
         {/* Linhas */}
         <div className="divide-y divide-gray-100">
-          {filteredOrders.length === 0 ? (
+          {loading ? (
+            <div className="px-4 py-6 text-center text-sm text-gray-500">
+              Carregando ordens de serviço...
+            </div>
+          ) : filteredOrders.length === 0 ? (
             <div className="px-4 py-6 text-center text-sm text-gray-500">
               Nenhuma OS encontrada.
             </div>
@@ -139,31 +201,22 @@ const OrdemServico = () => {
                   <FiFileText className="text-blue-500 text-base" />
                   <span className="font-medium text-blue-900">#{o.id}</span>
                 </div>
-                <span className="truncate">{o.customer}</span>
-                <span className="truncate">{o.device}</span>
+                <span className="truncate">{o.cliente?.pessoa?.nome}</span>
+                <span className="truncate">{o.equipamento?.equipamento}</span>
 
                 {/* Status com pill */}
                 <span>
                   <span
-                    className={`
-                      inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium
-                      ${
-                        o.status === "Concluída"
-                          ? "bg-green-50 text-green-700"
-                          : o.status === "Aguardando peça"
-                            ? "bg-orange-50 text-orange-700"
-                            : "bg-blue-50 text-blue-700"
-                      }
-                    `}
+                    className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium ${pillClasses(o.status)}`}
                   >
-                    {o.status}
+                    {statusLabel(o.status)}
                   </span>
                 </span>
 
-                {/* Ações somente visualizar */}
+                {/* Ações */}
                 <div className="flex items-center justify-end gap-2">
                   <button
-                    onClick={() => handleViewOrder(o.id)}
+                    onClick={() => handleViewOrder(o)}
                     className="
                       inline-flex items-center gap-1
                       px-3 py-1.5 rounded-full
@@ -176,12 +229,36 @@ const OrdemServico = () => {
                     <FiEye className="text-sm" />
                     <span>Ver detalhes</span>
                   </button>
+                  <button
+                    onClick={() => handleRemoveOrder(o)}
+                    className="
+                      inline-flex items-center justify-center
+                      h-8 w-8 rounded-full
+                      text-red-500 hover:bg-red-50
+                      transition-colors
+                    "
+                    title="Excluir"
+                  >
+                    <FiTrash2 className="text-sm" />
+                  </button>
                 </div>
               </div>
             ))
           )}
         </div>
       </div>
+
+      <OrdemServicoFormModal
+        isOpen={isFormOpen}
+        onClose={() => setIsFormOpen(false)}
+        onCreated={handleOrdemCriada}
+      />
+
+      <OrdemServicoDetalheModal
+        isOpen={!!osSelecionada}
+        onClose={() => setOsSelecionada(null)}
+        ordemServico={osSelecionada}
+      />
     </section>
   );
 };

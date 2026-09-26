@@ -1,6 +1,8 @@
 package com.assitenciaTecnica.logos.services;
 
 
+import java.util.List;
+
 import com.assitenciaTecnica.logos.data.dto.EquipamentoDTO;
 import com.assitenciaTecnica.logos.mapper.ObjectMapper;
 import com.assitenciaTecnica.logos.model.Equipamento;
@@ -33,5 +35,15 @@ public class EquipamentoService {
 
     public void deletar(Long id) {
         equipamentoRepository.deleteById(id);
+    }
+
+    public List<EquipamentoDTO> findAll() {
+        List<Equipamento> equipamentos = equipamentoRepository.findAll();
+        return ObjectMapper.parseListObjects(equipamentos, EquipamentoDTO.class);
+    }
+
+    public List<EquipamentoDTO> buscarPorCliente(Long clienteId) {
+        List<Equipamento> equipamentos = equipamentoRepository.findByCliente_Id(clienteId);
+        return ObjectMapper.parseListObjects(equipamentos, EquipamentoDTO.class);
     }
 }

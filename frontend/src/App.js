@@ -8,6 +8,9 @@ import Sidebar from "./components/Sidebar";
 import Dashboard from "./pages/Dashboard/Dashboard";
 import OrdemServico from "./pages/OrdemServico/OrdemServico";
 import Clientes from "./pages/Clientes/Clientes";
+import Equipamentos from "./pages/Equipamentos/Equipamentos";
+import Marcas from "./pages/Marcas/Marcas";
+import Materiais from "./pages/Materiais/Materiais";
 import Configuracoes from "./pages/Configuracoes/Configuracoes";
 import Login from "./pages/Auth/Login";
 import PrivateRoute from "./components/PrivateRoute";
@@ -37,7 +40,11 @@ function App() {
                                             {activeMenuId === 1 && <Dashboard />}
                                             {activeMenuId === 2 && <OrdemServico />}
                                             {activeMenuId === 3 && <Clientes />}
+                                            {/* Funcionários e Papéis agora são submenus dentro de Configurações */}
                                             {activeMenuId === 4 && <Configuracoes />}
+                                            {activeMenuId === 6 && <Equipamentos />}
+                                            {activeMenuId === 7 && <Marcas />}
+                                            {activeMenuId === 8 && <Materiais />}
                                         </main>
                                     </div>
                                 </>

@@ -9,6 +9,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import java.io.Serializable;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 @Entity
 @Table(name="equipamento")
 public class Equipamento implements Serializable{
@@ -62,6 +63,10 @@ public class Equipamento implements Serializable{
 		this.modelo = modelo;
 	}
 
+	// Evita recursão infinita ao serializar Cliente.equipamentos (cada Equipamento
+	// -> cliente -> Cliente.equipamentos -> o mesmo Equipamento -> ...). O cliente
+	// dono do equipamento já aparece via EquipamentoDTO.cliente quando necessário.
+	@JsonIgnore
 	public Cliente getCliente() {
 		return cliente;
 	}

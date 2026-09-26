@@ -13,6 +13,7 @@ import jakarta.persistence.Table;
 import java.util.GregorianCalendar;
 import java.util.List;
 import com.assitenciaTecnica.logos.model.enums.StatusOrdemServico;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name="ordemservico")
@@ -29,8 +30,10 @@ public class OrdemServico {
     private GregorianCalendar dataAbertura;
     @Column(nullable = false)
     private GregorianCalendar prazoConclusao;
-    @Column(nullable = false)
-    private  GregorianCalendar dataConclusao;
+    // Só é preenchida quando a OS é concluída/cancelada — não pode ser obrigatória
+    // na abertura da OS (senão seria impossível criar uma OS "ABERTA").
+    @Column
+    private GregorianCalendar dataConclusao;
     @Column(nullable = false)
     private Double valor;
     @Column(nullable = false)
@@ -55,6 +58,11 @@ public class OrdemServico {
         this.status = status;
     }
 
+    // Evita recursão infinita ao serializar PecaOrdemServicoDTO.ordemServico
+    // (que carrega a entidade OrdemServico completa): cada peça -> ordemServico
+    // -> pecas -> a mesma peça -> ... As peças de uma OS já são consultadas via
+    // GET /api/pecas-ordem-servico/v1/ordem-servico/{id}.
+    @JsonIgnore
     public List<PecaOrdemServico> getPecas() {
         return pecas;
     }

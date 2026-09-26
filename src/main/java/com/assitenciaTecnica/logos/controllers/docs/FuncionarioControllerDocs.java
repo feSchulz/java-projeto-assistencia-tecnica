@@ -36,7 +36,7 @@ public interface FuncionarioControllerDocs {
                     @ApiResponse(description = "Erro interno", responseCode = "500", content = @Content)
             }
     )
-    ResponseEntity<String> updateFuncionario(@RequestBody FuncionarioDTO funcionarioDTO);
+    ResponseEntity<String> updateFuncionario(@PathVariable Long id, @RequestBody FuncionarioDTO funcionarioDTO);
 
     @Operation(summary = "Buscar Funcionário por Nome",
             description = "Retorna funcionários filtrados pelo nome",
@@ -74,4 +74,16 @@ public interface FuncionarioControllerDocs {
             }
     )
     ResponseEntity<FuncionarioDTO> getFuncionarioById(@PathVariable Long id);
+
+    @Operation(summary = "Excluir Funcionário",
+            description = "Remove um funcionário existente pelo ID",
+            tags = {"Funcionario"},
+            responses = {
+                    @ApiResponse(description = "Sucesso", responseCode = "200",
+                            content = @Content(schema = @Schema(implementation = String.class))),
+                    @ApiResponse(description = "Erro de requisição", responseCode = "400", content = @Content),
+                    @ApiResponse(description = "Erro interno", responseCode = "500", content = @Content)
+            }
+    )
+    ResponseEntity<String> deleteFuncionario(@PathVariable Long id);
 }

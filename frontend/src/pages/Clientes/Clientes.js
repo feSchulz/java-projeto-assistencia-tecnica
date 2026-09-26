@@ -1,51 +1,74 @@
-import React, { useState } from "react";
-import { FiPlus, FiSearch, FiEye, FiTrash2, FiUsers } from "react-icons/fi";
+import React, { useCallback, useEffect, useState } from "react";
+import { FiPlus, FiSearch, FiEdit2, FiTrash2, FiUsers } from "react-icons/fi";
+import { useSelector } from "react-redux";
 import ClienteFormModal from "../../components/ClienteFormModal";
-
-const initialCustomers = [
-  {
-    id: 1,
-    name: "João Silva",
-    cpf: "123.456.789-00",
-    email: "teste@gmail.com",
-  },
-  {
-    id: 2,
-    name: "Maria Souza",
-    cpf: "987.654.321-00",
-    email: "teste2@gmail.com",
-  },
-  {
-    id: 3,
-    name: "Pedro Oliveira",
-    cpf: "111.222.333-44",
-    email: "teste3@gmail.com",
-  },
-];
+import { listarClientes, excluirCliente } from "../../services/ClienteService";
 
 const Clientes = () => {
-  const [customers, setCustomers] = useState(initialCustomers);
+  const { token } = useSelector((state) => state.auth);
+
+  const [customers, setCustomers] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [clienteEditando, setClienteEditando] = useState(null);
   const [feedback, setFeedback] = useState("");
+  const [error, setError] = useState("");
 
-  const filteredCustomers = customers.filter(
-    (c) =>
-      c.name.toLowerCase().includes(search.toLowerCase()) ||
-      c.cpf.includes(search.replace(/\D/g, "")),
-  );
+  const carregarClientes = useCallback(() => {
+    setLoading(true);
+    setError("");
+    listarClientes(token)
+      .then(setCustomers)
+      .catch((err) => setError(err.message || "Não foi possível carregar os clientes."))
+      .finally(() => setLoading(false));
+  }, [token]);
+
+  useEffect(() => {
+    carregarClientes();
+  }, [carregarClientes]);
+
+  const filteredCustomers = customers.filter((c) => {
+    const nome = c.pessoa?.nome || "";
+    const cpf = c.pessoa?.cpf || "";
+    const termo = search.toLowerCase();
+    return (
+      nome.toLowerCase().includes(termo) || cpf.includes(search.replace(/\D/g, ""))
+    );
+  });
 
   const handleAddCustomer = () => {
+    setClienteEditando(null);
     setFeedback("");
     setIsModalOpen(true);
   };
 
-  const handleClienteCriado = () => {
-    setFeedback("Cliente cadastrado com sucesso.");
+  const handleEditCustomer = (cliente) => {
+    setClienteEditando(cliente);
+    setFeedback("");
+    setIsModalOpen(true);
   };
 
-  const handleRemoveCustomer = (id) => {
-    setCustomers(customers.filter((c) => c.id !== id));
+  const handleClienteSalvo = () => {
+    setFeedback(
+      clienteEditando ? "Cliente atualizado com sucesso." : "Cliente cadastrado com sucesso.",
+    );
+    carregarClientes();
+  };
+
+  const handleRemoveCustomer = async (cliente) => {
+    const nome = cliente.pessoa?.nome || `#${cliente.id}`;
+    if (!window.confirm(`Excluir o cliente "${nome}"? Essa ação não pode ser desfeita.`)) {
+      return;
+    }
+
+    try {
+      await excluirCliente(cliente.id, token);
+      setFeedback(`Cliente "${nome}" excluído com sucesso.`);
+      carregarClientes();
+    } catch (err) {
+      setError(err.message || "Não foi possível excluir o cliente.");
+    }
   };
 
   return (
@@ -81,9 +104,14 @@ const Clientes = () => {
       </div>
 
       {feedback && (
-          <div className="rounded-md border border-green-100 bg-green-50 px-4 py-2 text-sm text-green-700">
-            {feedback}
-          </div>
+        <div className="rounded-md border border-green-100 bg-green-50 px-4 py-2 text-sm text-green-700">
+          {feedback}
+        </div>
+      )}
+      {error && (
+        <div className="rounded-md border border-red-100 bg-red-50 px-4 py-2 text-sm text-red-700">
+          {error}
+        </div>
       )}
 
       {/* Barra de busca */}
@@ -119,7 +147,11 @@ const Clientes = () => {
 
         {/* Linhas */}
         <div className="divide-y divide-gray-100">
-          {filteredCustomers.length === 0 ? (
+          {loading ? (
+            <div className="px-4 py-6 text-center text-sm text-gray-500">
+              Carregando clientes...
+            </div>
+          ) : filteredCustomers.length === 0 ? (
             <div className="px-4 py-6 text-center text-sm text-gray-500">
               Nenhum cliente encontrado.
             </div>
@@ -134,24 +166,24 @@ const Clientes = () => {
                   transition-colors
                 "
               >
-                <span className="truncate">{c.name}</span>
-                <span className="truncate">{c.cpf}</span>
-                <span className="truncate">{c.email}</span>
+                <span className="truncate">{c.pessoa?.nome}</span>
+                <span className="truncate">{c.pessoa?.cpf}</span>
+                <span className="truncate">{c.pessoa?.email}</span>
                 <div className="flex items-center justify-end gap-2">
                   <button
-                    onClick={() => alert(`Visualizar cliente ${c.name}`)}
+                    onClick={() => handleEditCustomer(c)}
                     className="
                       inline-flex items-center justify-center
                       h-8 w-8 rounded-full
                       text-blue-600 hover:bg-blue-100
                       transition-colors
                     "
-                    title="Visualizar"
+                    title="Editar"
                   >
-                    <FiEye className="text-base" />
+                    <FiEdit2 className="text-base" />
                   </button>
                   <button
-                    onClick={() => handleRemoveCustomer(c.id)}
+                    onClick={() => handleRemoveCustomer(c)}
                     className="
                       inline-flex items-center justify-center
                       h-8 w-8 rounded-full
@@ -168,10 +200,12 @@ const Clientes = () => {
           )}
         </div>
       </div>
+
       <ClienteFormModal
-          isOpen={isModalOpen}
-          onClose={() => setIsModalOpen(false)}
-          onCreated={handleClienteCriado}
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onCreated={handleClienteSalvo}
+        clienteEditando={clienteEditando}
       />
     </section>
   );

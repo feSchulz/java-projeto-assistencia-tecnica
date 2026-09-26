@@ -1,7 +1,6 @@
 package com.assitenciaTecnica.logos.services;
 
 import java.util.List;
-import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.assitenciaTecnica.logos.data.dto.OrdemServicoDTO;
@@ -33,9 +32,24 @@ public class OrdemServicoService {
     }
 
     public OrdemServicoDTO buscarPorId(Long id) {
-
-
-        Optional<OrdemServico> osModel=  repositoryOrdemServico.findById(id);
+        OrdemServico osModel = repositoryOrdemServico.findById(id)
+                .orElseThrow(() -> new RuntimeException("Ordem de serviço não encontrada"));
         return ObjectMapper.parseObject(osModel,OrdemServicoDTO.class);
+    }
+
+    public void deletar(Long id) {
+        OrdemServico osModel = repositoryOrdemServico.findById(id)
+                .orElseThrow(() -> new RuntimeException("Ordem de serviço não encontrada"));
+        repositoryOrdemServico.delete(osModel);
+    }
+
+    public List<OrdemServicoDTO> buscarPorCliente(Long clienteId) {
+        List<OrdemServico> os = repositoryOrdemServico.findByCliente_Id(clienteId);
+        return ObjectMapper.parseListObjects(os, OrdemServicoDTO.class);
+    }
+
+    public List<OrdemServicoDTO> buscarPorStatus(Long status) {
+        List<OrdemServico> os = repositoryOrdemServico.findByStatus(status);
+        return ObjectMapper.parseListObjects(os, OrdemServicoDTO.class);
     }
 }

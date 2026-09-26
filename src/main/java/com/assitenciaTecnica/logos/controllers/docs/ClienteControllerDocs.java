@@ -76,4 +76,16 @@ public interface ClienteControllerDocs {
             }
     )
     ResponseEntity<String> updateCliente(@RequestBody ClienteDTO clienteDTO);
+
+    @Operation(summary = "Excluir Cliente",
+            description = "Remove um cliente existente pelo ID",
+            tags = {"Cliente"},
+            responses = {
+                    @ApiResponse(description = "Sucesso", responseCode = "200",
+                            content = @Content(schema = @Schema(implementation = String.class))),
+                    @ApiResponse(description = "Erro de requisição", responseCode = "400", content = @Content),
+                    @ApiResponse(description = "Erro interno", responseCode = "500", content = @Content)
+            }
+    )
+    ResponseEntity<String> deleteCliente(@PathVariable Long id);
 }

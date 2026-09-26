@@ -10,6 +10,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import java.util.List;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name = "papel")
@@ -50,6 +51,11 @@ public class Papel {
         this.nome = nome;
     }
 
+    // Evita recursão infinita ao serializar FuncionarioDTO.papel (que carrega a
+    // entidade Papel completa): cada funcionário -> papel -> funcionarios -> o
+    // mesmo funcionário -> ... A lista de papéis já é consultada via
+    // GET /api/papeis/v1 (sem essa coleção, ver PapelService.toDto).
+    @JsonIgnore
     public List<Funcionario> getFuncionarios() {
         return funcionarios;
     }
