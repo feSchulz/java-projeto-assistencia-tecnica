@@ -20,7 +20,12 @@ const Funcionarios = () => {
     setError("");
     listarFuncionarios(token)
       .then(setFuncionarios)
-      .catch((err) => setError(err.message || "Não foi possível carregar os funcionários."))
+      // Lista vazia (ou falha pontual ao buscar) não é erro: a tela já trata
+      // isso com "Nenhum funcionário encontrado.", sem banner de erro.
+      .catch((err) => {
+        console.error("Erro ao carregar funcionários:", err);
+        setFuncionarios([]);
+      })
       .finally(() => setLoading(false));
   }, [token]);
 

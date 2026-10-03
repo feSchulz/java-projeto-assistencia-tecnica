@@ -20,7 +20,12 @@ const Equipamentos = () => {
     setError("");
     listarEquipamentos(token)
       .then(setEquipamentos)
-      .catch((err) => setError(err.message || "Não foi possível carregar os equipamentos."))
+      // Lista vazia (ou falha pontual ao buscar) não é erro: a tela já trata
+      // isso com "Nenhum equipamento encontrado.", sem banner de erro.
+      .catch((err) => {
+        console.error("Erro ao carregar equipamentos:", err);
+        setEquipamentos([]);
+      })
       .finally(() => setLoading(false));
   }, [token]);
 

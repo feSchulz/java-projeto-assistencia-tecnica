@@ -20,7 +20,12 @@ const Papeis = () => {
     setError("");
     listarPapeis(token)
       .then(setPapeis)
-      .catch((err) => setError(err.message || "Não foi possível carregar os papéis."))
+      // Lista vazia (ou falha pontual ao buscar) não é erro: a tela já trata
+      // isso com "Nenhum papel encontrado.", sem banner de erro.
+      .catch((err) => {
+        console.error("Erro ao carregar papéis:", err);
+        setPapeis([]);
+      })
       .finally(() => setLoading(false));
   }, [token]);
 

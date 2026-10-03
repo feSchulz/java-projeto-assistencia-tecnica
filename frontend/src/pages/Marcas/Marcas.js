@@ -172,7 +172,12 @@ const Marcas = () => {
     setError("");
     listarMarcas(token)
       .then(setMarcas)
-      .catch((err) => setError(err.message || "Não foi possível carregar as marcas."))
+      // Lista vazia (ou falha pontual ao buscar) não é erro: a tela já trata
+      // isso com "Nenhuma marca encontrada.", sem banner de erro.
+      .catch((err) => {
+        console.error("Erro ao carregar marcas:", err);
+        setMarcas([]);
+      })
       .finally(() => setLoading(false));
   }, [token]);
 

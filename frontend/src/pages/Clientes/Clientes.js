@@ -20,7 +20,14 @@ const Clientes = () => {
     setError("");
     listarClientes(token)
       .then(setCustomers)
-      .catch((err) => setError(err.message || "Não foi possível carregar os clientes."))
+      // Não ter clientes cadastrados (ou uma falha momentânea ao buscar a lista)
+      // não é um erro para o usuário: a tela já trata lista vazia com a
+      // mensagem "Nenhum cliente encontrado.", então aqui só registramos no
+      // console para depuração, sem exibir um banner de erro.
+      .catch((err) => {
+        console.error("Erro ao carregar clientes:", err);
+        setCustomers([]);
+      })
       .finally(() => setLoading(false));
   }, [token]);
 

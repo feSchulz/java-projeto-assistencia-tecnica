@@ -83,7 +83,11 @@ const ClienteFormModal = ({ isOpen, onClose, onCreated, clienteEditando }) => {
         setLoadingEstados(true);
         listarEstados(token)
             .then(setEstados)
-            .catch((err) => setError(err.message))
+            // Lista vazia (ou falha pontual) não é erro: o <select> só fica sem opções.
+            .catch((err) => {
+                console.error("Erro ao carregar estados:", err);
+                setEstados([]);
+            })
             .finally(() => setLoadingEstados(false));
     }, [isOpen, token]);
 
@@ -100,7 +104,11 @@ const ClienteFormModal = ({ isOpen, onClose, onCreated, clienteEditando }) => {
         setLoadingCidades(true);
         listarCidades(form.estadoId, token)
             .then(setCidades)
-            .catch((err) => setError(err.message))
+            // Lista vazia (ou falha pontual) não é erro: o <select> só fica sem opções.
+            .catch((err) => {
+                console.error("Erro ao carregar cidades:", err);
+                setCidades([]);
+            })
             .finally(() => setLoadingCidades(false));
     }, [form.estadoId, token, preservandoCidadeAtual]);
 

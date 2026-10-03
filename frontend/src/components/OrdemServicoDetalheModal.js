@@ -36,7 +36,12 @@ const OrdemServicoDetalheModal = ({ isOpen, onClose, ordemServico }) => {
     setLoadingPecas(true);
     listarPecasPorOrdemServico(ordemServico.id, token)
       .then(setPecas)
-      .catch((err) => setError(err.message))
+      // Lista vazia (ou falha pontual) não é erro: a tela já trata isso
+      // mostrando que não há peças associadas.
+      .catch((err) => {
+        console.error("Erro ao carregar peças da ordem de serviço:", err);
+        setPecas([]);
+      })
       .finally(() => setLoadingPecas(false));
   }, [ordemServico, token]);
 
@@ -45,7 +50,12 @@ const OrdemServicoDetalheModal = ({ isOpen, onClose, ordemServico }) => {
     setError("");
     setNovaPeca({ materialId: "", quantidade: "1" });
     carregarPecas();
-    listarMateriais(token).then(setMateriais).catch((err) => setError(err.message));
+    listarMateriais(token)
+      .then(setMateriais)
+      .catch((err) => {
+        console.error("Erro ao carregar materiais:", err);
+        setMateriais([]);
+      });
   }, [isOpen, carregarPecas, token]);
 
   if (!isOpen || !ordemServico) return null;

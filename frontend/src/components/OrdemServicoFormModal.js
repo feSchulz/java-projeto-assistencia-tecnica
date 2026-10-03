@@ -35,8 +35,19 @@ const OrdemServicoFormModal = ({ isOpen, onClose, onCreated }) => {
     setEquipamentos([]);
     setError("");
 
-    listarClientes(token).then(setClientes).catch((err) => setError(err.message));
-    listarFuncionarios(token).then(setFuncionarios).catch((err) => setError(err.message));
+    // Lista vazia (ou falha pontual) não é erro: os <select>s só ficam sem opções.
+    listarClientes(token)
+      .then(setClientes)
+      .catch((err) => {
+        console.error("Erro ao carregar clientes:", err);
+        setClientes([]);
+      });
+    listarFuncionarios(token)
+      .then(setFuncionarios)
+      .catch((err) => {
+        console.error("Erro ao carregar funcionários:", err);
+        setFuncionarios([]);
+      });
   }, [isOpen, token]);
 
   useEffect(() => {
@@ -48,7 +59,11 @@ const OrdemServicoFormModal = ({ isOpen, onClose, onCreated }) => {
     setLoadingEquipamentos(true);
     listarEquipamentosPorCliente(form.clienteId, token)
       .then(setEquipamentos)
-      .catch((err) => setError(err.message))
+      // Lista vazia (ou falha pontual) não é erro: o <select> só fica sem opções.
+      .catch((err) => {
+        console.error("Erro ao carregar equipamentos do cliente:", err);
+        setEquipamentos([]);
+      })
       .finally(() => setLoadingEquipamentos(false));
   }, [form.clienteId, token]);
 

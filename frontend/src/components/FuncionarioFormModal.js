@@ -80,10 +80,19 @@ const FuncionarioFormModal = ({ isOpen, onClose, onCreated, funcionarioEditando 
     setLoadingEstados(true);
     listarEstados(token)
       .then(setEstados)
-      .catch((err) => setError(err.message))
+      // Lista vazia (ou falha pontual) não é erro: o <select> só fica sem opções.
+      .catch((err) => {
+        console.error("Erro ao carregar estados:", err);
+        setEstados([]);
+      })
       .finally(() => setLoadingEstados(false));
 
-    listarPapeis(token).then(setPapeis).catch((err) => setError(err.message));
+    listarPapeis(token)
+      .then(setPapeis)
+      .catch((err) => {
+        console.error("Erro ao carregar papéis:", err);
+        setPapeis([]);
+      });
   }, [isOpen, token]);
 
   useEffect(() => {
@@ -96,7 +105,11 @@ const FuncionarioFormModal = ({ isOpen, onClose, onCreated, funcionarioEditando 
     setLoadingCidades(true);
     listarCidades(form.estadoId, token)
       .then(setCidades)
-      .catch((err) => setError(err.message))
+      // Lista vazia (ou falha pontual) não é erro: o <select> só fica sem opções.
+      .catch((err) => {
+        console.error("Erro ao carregar cidades:", err);
+        setCidades([]);
+      })
       .finally(() => setLoadingCidades(false));
   }, [form.estadoId, token, preservandoCidadeAtual]);
 

@@ -22,8 +22,19 @@ const EquipamentoFormModal = ({ isOpen, onClose, onCreated, equipamentoEditando 
   useEffect(() => {
     if (!isOpen) return;
 
-    listarClientes(token).then(setClientes).catch((err) => setError(err.message));
-    listarMarcas(token).then(setMarcas).catch((err) => setError(err.message));
+    // Lista vazia (ou falha pontual) não é erro: os <select>s só ficam sem opções.
+    listarClientes(token)
+      .then(setClientes)
+      .catch((err) => {
+        console.error("Erro ao carregar clientes:", err);
+        setClientes([]);
+      });
+    listarMarcas(token)
+      .then(setMarcas)
+      .catch((err) => {
+        console.error("Erro ao carregar marcas:", err);
+        setMarcas([]);
+      });
 
     if (equipamentoEditando) {
       setForm({

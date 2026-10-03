@@ -34,7 +34,13 @@ const MaterialFormModal = ({ isOpen, onClose, onCreated, materialEditando }) => 
   useEffect(() => {
     if (!isOpen) return;
 
-    listarMarcas(token).then(setMarcas).catch((err) => setError(err.message));
+    // Lista vazia (ou falha pontual) não é erro: o <select> só fica sem opções.
+    listarMarcas(token)
+      .then(setMarcas)
+      .catch((err) => {
+        console.error("Erro ao carregar marcas:", err);
+        setMarcas([]);
+      });
 
     if (materialEditando) {
       setForm({

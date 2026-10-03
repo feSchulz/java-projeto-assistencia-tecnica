@@ -44,7 +44,12 @@ const OrdemServico = () => {
 
     requisicao
       .then(setOrders)
-      .catch((err) => setError(err.message || "Não foi possível carregar as ordens de serviço."))
+      // Lista vazia (ou falha pontual ao buscar) não é erro: a tela já trata
+      // isso com "Nenhuma ordem de serviço encontrada.", sem banner de erro.
+      .catch((err) => {
+        console.error("Erro ao carregar ordens de serviço:", err);
+        setOrders([]);
+      })
       .finally(() => setLoading(false));
   }, [statusFiltro, token]);
 

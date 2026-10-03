@@ -25,7 +25,12 @@ const Materiais = () => {
     setError("");
     listarMateriais(token)
       .then(setMateriais)
-      .catch((err) => setError(err.message || "Não foi possível carregar os materiais."))
+      // Lista vazia (ou falha pontual ao buscar) não é erro: a tela já trata
+      // isso com "Nenhum material encontrado.", sem banner de erro.
+      .catch((err) => {
+        console.error("Erro ao carregar materiais:", err);
+        setMateriais([]);
+      })
       .finally(() => setLoading(false));
   }, [token]);
 
