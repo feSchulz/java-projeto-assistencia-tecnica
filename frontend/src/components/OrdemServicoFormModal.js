@@ -1,11 +1,17 @@
 // src/components/OrdemServicoFormModal.js
 import React, { useEffect, useState } from "react";
-import { FiTool, FiX } from "react-icons/fi";
+import { FiTool, FiX, FiShield } from "react-icons/fi";
 import { useSelector } from "react-redux";
 import { listarClientes } from "../services/ClienteService";
 import { listarEquipamentosPorCliente } from "../services/EquipamentoService";
 import { listarFuncionarios } from "../services/FuncionarioService";
-import { criarOrdemServico, STATUS_OS } from "../services/OrdemServicoService";
+import {
+  criarOrdemServico,
+  buscarGarantiaEquipamento,
+  STATUS_OS,
+  STATUS_INICIAIS,
+} from "../services/OrdemServicoService";
+import { formatarData } from "../utils/formatadores";
 
 const initialForm = {
   clienteId: "",
@@ -28,10 +34,13 @@ const OrdemServicoFormModal = ({ isOpen, onClose, onCreated }) => {
   const [loadingEquipamentos, setLoadingEquipamentos] = useState(false);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
+  // garantia ainda em vigor de uma OS anterior do mesmo equipamento (aviso de possível retorno)
+  const [garantia, setGarantia] = useState(null);
 
   useEffect(() => {
     if (!isOpen) return;
     setForm(initialForm);
+    setGarantia(null);
     setEquipamentos([]);
     setError("");
 
@@ -58,7 +67,8 @@ const OrdemServicoFormModal = ({ isOpen, onClose, onCreated }) => {
 
     setLoadingEquipamentos(true);
     listarEquipamentosPorCliente(form.clienteId, token)
-      .then(setEquipamentos)
+      // equipamentos inativados (excluídos que têm OS) não podem receber OS novas
+      .then((lista) => setEquipamentos(lista.filter((e) => e.ativo !== false)))
       // Lista vazia (ou falha pontual) não é erro: o <select> só fica sem opções.
       .catch((err) => {
         console.error("Erro ao carregar equipamentos do cliente:", err);
@@ -66,6 +76,15 @@ const OrdemServicoFormModal = ({ isOpen, onClose, onCreated }) => {
       })
       .finally(() => setLoadingEquipamentos(false));
   }, [form.clienteId, token]);
+
+  useEffect(() => {
+    setGarantia(null);
+    if (!form.equipamentoId) return;
+    buscarGarantiaEquipamento(form.equipamentoId, token)
+      .then(setGarantia)
+      // não conseguir consultar a garantia não impede de abrir a OS: só não mostra o aviso
+      .catch((err) => console.error("Erro ao verificar garantia:", err));
+  }, [form.equipamentoId, token]);
 
   if (!isOpen) return null;
 
@@ -106,6 +125,8 @@ const OrdemServicoFormModal = ({ isOpen, onClose, onCreated }) => {
         prazoConclusao: prazo,
         valor: Number(form.valor),
         status: form.status,
+        // OS criada já em orçamento: o valor informado é o valor orçado
+        ...(form.status === "ORCAMENTO" ? { valorOrcado: Number(form.valor) } : {}),
         cliente: { id: Number(form.clienteId) },
         equipamento: { id: Number(form.equipamentoId) },
         funcionarioResponsavel: { id: Number(form.funcionarioId) },
@@ -198,6 +219,17 @@ const OrdemServicoFormModal = ({ isOpen, onClose, onCreated }) => {
               </select>
             </div>
 
+            {garantia && (
+              <div className="col-span-2 flex items-start gap-2 rounded-md border border-amber-200 bg-amber-50 px-3 py-2 text-xs text-amber-800">
+                <FiShield className="mt-0.5 text-sm shrink-0" />
+                <span>
+                  Este equipamento está em <strong>garantia</strong> até{" "}
+                  <strong>{formatarData(garantia.fimGarantia)}</strong> (OS #{garantia.ordemServicoId},
+                  concluída em {formatarData(garantia.dataConclusao)}). Pode ser um retorno em garantia.
+                </span>
+              </div>
+            )}
+
             <div className="col-span-2">
               <label className="mb-1 block text-xs font-medium text-gray-600">
                 Relato do cliente
@@ -249,7 +281,7 @@ const OrdemServicoFormModal = ({ isOpen, onClose, onCreated }) => {
                 onChange={handleChange("status")}
                 className="w-full rounded-md border border-gray-200 bg-white px-3 py-2 text-sm text-gray-700 shadow-sm focus:border-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-400"
               >
-                {STATUS_OS.map((s) => (
+                {STATUS_OS.filter((s) => STATUS_INICIAIS.includes(s.nome)).map((s) => (
                   <option key={s.nome} value={s.nome}>
                     {s.label}
                   </option>
@@ -271,7 +303,7 @@ const OrdemServicoFormModal = ({ isOpen, onClose, onCreated }) => {
 
             <div>
               <label className="mb-1 block text-xs font-medium text-gray-600">
-                Valor orçado (R$)
+                Valor (R$)
               </label>
               <input
                 type="number"

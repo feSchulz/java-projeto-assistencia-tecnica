@@ -43,4 +43,18 @@ public class EnderecoService {
         return ObjectMapper.parseObject(cidade, CidadeDTO.class);
     }
 
+    // Retorna a entidade Cidade de verdade (via repositório), não uma cópia
+    // gerada pelo Dozer. Usar isso (em vez de buscarCidadesById + Dozer) antes
+    // de um mapeamento DTO -> Entidade evita o erro "Illegal object type for
+    // the method 'setCidade'": quando um Cidade "sintetizado" pelo Dozer é
+    // colocado dentro do DTO e depois o mapeamento externo (ex.: FuncionarioDTO
+    // -> Funcionario) tenta remapear essa Cidade de novo, o Dozer cria outra
+    // instância que não bate com o tipo esperado pelo setter, mesmo os dois
+    // se chamando "Cidade". Mesmo cuidado já aplicado à resolução de Papel em
+    // FuncionarioController (busca direto no repositório, nunca via Dozer).
+    public Cidade buscarCidadeEntidadeById(Long idCidade) {
+        return cidadeRepository.findById(idCidade)
+                .orElseThrow(() -> new RuntimeException("Cidade não encontrada"));
+    }
+
 }

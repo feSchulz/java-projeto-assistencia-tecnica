@@ -24,36 +24,6 @@ public class PapelService {
                 .collect(Collectors.toList());
     }
 
-    public PapelDTO buscarPorId(Long id) {
-        Papel papel = papelRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Papel não encontrado"));
-        return toDto(papel);
-    }
-
-    public void salvar(PapelDTO dto) {
-        Papel papel = new Papel();
-        papel.setCodigo(dto.getCodigo());
-        papel.setNome(dto.getNome());
-        papelRepository.save(papel);
-    }
-
-    public void atualizar(PapelDTO dto) {
-        Papel papel = papelRepository.findById(dto.getId())
-                .orElseThrow(() -> new RuntimeException("Papel não encontrado"));
-        papel.setCodigo(dto.getCodigo());
-        papel.setNome(dto.getNome());
-        papelRepository.save(papel);
-    }
-
-    public void deletar(Long id) {
-        Papel papel = papelRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Papel não encontrado"));
-        papelRepository.delete(papel);
-    }
-
-    // Mapeamento manual (sem Dozer): PapelDTO não expõe mais a lista de
-    // funcionários, então não há risco de serializar entidades completas
-    // (incluindo hash de senha) nem de recursão Papel -> Funcionario -> Papel.
     private PapelDTO toDto(Papel papel) {
         PapelDTO dto = new PapelDTO();
         dto.setId(papel.getId());

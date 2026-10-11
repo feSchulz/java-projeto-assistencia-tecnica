@@ -65,8 +65,9 @@ const Funcionarios = () => {
     if (!window.confirm(`Excluir o funcionário "${nome}"? Essa ação não pode ser desfeita.`)) return;
 
     try {
-      await excluirFuncionario(funcionario.id, token);
-      setFeedback(`Funcionário "${nome}" excluído com sucesso.`);
+      // o servidor diz se apagou de vez ou só inativou (funcionário responsável por OS)
+      const mensagem = await excluirFuncionario(funcionario.id, token);
+      setFeedback(mensagem || `Funcionário "${nome}" excluído com sucesso.`);
       carregar();
     } catch (err) {
       setError(err.message || "Não foi possível excluir o funcionário.");

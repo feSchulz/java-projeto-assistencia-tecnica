@@ -1,15 +1,37 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { FiPlus, FiSearch, FiEdit2, FiTrash2, FiUsers } from "react-icons/fi";
+import { FiPlus, FiSearch, FiEdit2, FiTrash2, FiUsers, FiClock } from "react-icons/fi";
 import { useSelector } from "react-redux";
 import ClienteFormModal from "../../components/ClienteFormModal";
-import { listarClientes, excluirCliente } from "../../services/ClienteService";
+import ClienteHistoricoModal from "../../components/ClienteHistoricoModal";
+import Paginacao from "../../components/Paginacao";
+import { buscarClientesPaginado, excluirCliente } from "../../services/ClienteService";
+import { usePermissoes } from "../../utils/permissoes";
+import { useDebouncedValue } from "../../utils/hooks";
+import { useNavegacao } from "../../context/NavegacaoContext";
+import { maskCpf } from "../../utils/masks";
+
+const TAMANHO_PAGINA = 10;
 
 const Clientes = () => {
   const { token } = useSelector((state) => state.auth);
 
-  const [customers, setCustomers] = useState([]);
+  const { isAdmin } = usePermissoes();
+  const { parametros, limpar } = useNavegacao();
+
+  const [pagina, setPagina] = useState({ content: [], page: 0, totalPages: 0, totalElements: 0 });
+  const [page, setPage] = useState(0);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
+  const [clienteHistorico, setClienteHistorico] = useState(null);
+  const buscaDebounced = useDebouncedValue(search);
+
+  // Busca vinda de outra tela (busca global do cabeçalho).
+  useEffect(() => {
+    if (!parametros || parametros.busca === undefined) return;
+    setSearch(String(parametros.busca));
+    setPage(0);
+    limpar();
+  }, [parametros, limpar]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [clienteEditando, setClienteEditando] = useState(null);
   const [feedback, setFeedback] = useState("");
@@ -18,31 +40,24 @@ const Clientes = () => {
   const carregarClientes = useCallback(() => {
     setLoading(true);
     setError("");
-    listarClientes(token)
-      .then(setCustomers)
+    buscarClientesPaginado({ page, size: TAMANHO_PAGINA, q: buscaDebounced }, token)
+      .then(setPagina)
       // Não ter clientes cadastrados (ou uma falha momentânea ao buscar a lista)
       // não é um erro para o usuário: a tela já trata lista vazia com a
       // mensagem "Nenhum cliente encontrado.", então aqui só registramos no
       // console para depuração, sem exibir um banner de erro.
       .catch((err) => {
         console.error("Erro ao carregar clientes:", err);
-        setCustomers([]);
+        setPagina({ content: [], page: 0, totalPages: 0, totalElements: 0 });
       })
       .finally(() => setLoading(false));
-  }, [token]);
+  }, [page, buscaDebounced, token]);
 
   useEffect(() => {
     carregarClientes();
   }, [carregarClientes]);
 
-  const filteredCustomers = customers.filter((c) => {
-    const nome = c.pessoa?.nome || "";
-    const cpf = c.pessoa?.cpf || "";
-    const termo = search.toLowerCase();
-    return (
-      nome.toLowerCase().includes(termo) || cpf.includes(search.replace(/\D/g, ""))
-    );
-  });
+  const customers = pagina.content;
 
   const handleAddCustomer = () => {
     setClienteEditando(null);
@@ -70,8 +85,9 @@ const Clientes = () => {
     }
 
     try {
-      await excluirCliente(cliente.id, token);
-      setFeedback(`Cliente "${nome}" excluído com sucesso.`);
+      // o servidor diz se apagou de vez ou só inativou (cliente com ordens de serviço)
+      const mensagem = await excluirCliente(cliente.id, token);
+      setFeedback(mensagem || `Cliente "${nome}" excluído com sucesso.`);
       carregarClientes();
     } catch (err) {
       setError(err.message || "Não foi possível excluir o cliente.");
@@ -127,9 +143,12 @@ const Clientes = () => {
           <FiSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm" />
           <input
             type="text"
-            placeholder="Buscar por nome ou CPF"
+            placeholder="Buscar por nome, CPF, telefone ou e-mail"
             value={search}
-            onChange={(e) => setSearch(e.target.value)}
+            onChange={(e) => {
+              setSearch(e.target.value);
+              setPage(0);
+            }}
             className="
               w-full pl-9 pr-3 py-2
               rounded-md border border-gray-200
@@ -158,12 +177,12 @@ const Clientes = () => {
             <div className="px-4 py-6 text-center text-sm text-gray-500">
               Carregando clientes...
             </div>
-          ) : filteredCustomers.length === 0 ? (
+          ) : customers.length === 0 ? (
             <div className="px-4 py-6 text-center text-sm text-gray-500">
               Nenhum cliente encontrado.
             </div>
           ) : (
-            filteredCustomers.map((c) => (
+            customers.map((c) => (
               <div
                 key={c.id}
                 className="
@@ -174,9 +193,21 @@ const Clientes = () => {
                 "
               >
                 <span className="truncate">{c.pessoa?.nome}</span>
-                <span className="truncate">{c.pessoa?.cpf}</span>
+                <span className="truncate">{c.pessoa?.cpf ? maskCpf(c.pessoa.cpf) : ""}</span>
                 <span className="truncate">{c.pessoa?.email}</span>
                 <div className="flex items-center justify-end gap-2">
+                  <button
+                    onClick={() => setClienteHistorico(c)}
+                    className="
+                      inline-flex items-center justify-center
+                      h-8 w-8 rounded-full
+                      text-gray-500 hover:bg-gray-100
+                      transition-colors
+                    "
+                    title="Histórico do cliente"
+                  >
+                    <FiClock className="text-base" />
+                  </button>
                   <button
                     onClick={() => handleEditCustomer(c)}
                     className="
@@ -189,24 +220,39 @@ const Clientes = () => {
                   >
                     <FiEdit2 className="text-base" />
                   </button>
-                  <button
-                    onClick={() => handleRemoveCustomer(c)}
-                    className="
-                      inline-flex items-center justify-center
-                      h-8 w-8 rounded-full
-                      text-red-500 hover:bg-red-50
-                      transition-colors
-                    "
-                    title="Remover"
-                  >
-                    <FiTrash2 className="text-base" />
-                  </button>
+                  {isAdmin && (
+                    <button
+                      onClick={() => handleRemoveCustomer(c)}
+                      className="
+                        inline-flex items-center justify-center
+                        h-8 w-8 rounded-full
+                        text-red-500 hover:bg-red-50
+                        transition-colors
+                      "
+                      title="Remover"
+                    >
+                      <FiTrash2 className="text-base" />
+                    </button>
+                  )}
                 </div>
               </div>
             ))
           )}
         </div>
+        <Paginacao
+          page={pagina.page}
+          totalPages={pagina.totalPages}
+          totalElements={pagina.totalElements}
+          size={TAMANHO_PAGINA}
+          onChange={setPage}
+        />
       </div>
+
+      <ClienteHistoricoModal
+        isOpen={!!clienteHistorico}
+        onClose={() => setClienteHistorico(null)}
+        cliente={clienteHistorico}
+      />
 
       <ClienteFormModal
         isOpen={isModalOpen}

@@ -2,14 +2,33 @@ import React, { useCallback, useEffect, useState } from "react";
 import { FiPlus, FiSearch, FiEdit2, FiTrash2, FiTool } from "react-icons/fi";
 import { useSelector } from "react-redux";
 import EquipamentoFormModal from "../../components/EquipamentoFormModal";
-import { listarEquipamentos, excluirEquipamento } from "../../services/EquipamentoService";
+import Paginacao from "../../components/Paginacao";
+import { buscarEquipamentosPaginado, excluirEquipamento } from "../../services/EquipamentoService";
+import { usePermissoes } from "../../utils/permissoes";
+import { useDebouncedValue } from "../../utils/hooks";
+import { useNavegacao } from "../../context/NavegacaoContext";
+
+const TAMANHO_PAGINA = 10;
 
 const Equipamentos = () => {
   const { token } = useSelector((state) => state.auth);
 
-  const [equipamentos, setEquipamentos] = useState([]);
+  const { isAdmin } = usePermissoes();
+  const { parametros, limpar } = useNavegacao();
+
+  const [pagina, setPagina] = useState({ content: [], page: 0, totalPages: 0, totalElements: 0 });
+  const [page, setPage] = useState(0);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
+  const buscaDebounced = useDebouncedValue(search);
+
+  // Busca vinda de outra tela (busca global do cabeçalho).
+  useEffect(() => {
+    if (!parametros || parametros.busca === undefined) return;
+    setSearch(String(parametros.busca));
+    setPage(0);
+    limpar();
+  }, [parametros, limpar]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [equipamentoEditando, setEquipamentoEditando] = useState(null);
   const [feedback, setFeedback] = useState("");
@@ -18,28 +37,22 @@ const Equipamentos = () => {
   const carregar = useCallback(() => {
     setLoading(true);
     setError("");
-    listarEquipamentos(token)
-      .then(setEquipamentos)
+    buscarEquipamentosPaginado({ page, size: TAMANHO_PAGINA, q: buscaDebounced }, token)
+      .then(setPagina)
       // Lista vazia (ou falha pontual ao buscar) não é erro: a tela já trata
       // isso com "Nenhum equipamento encontrado.", sem banner de erro.
       .catch((err) => {
         console.error("Erro ao carregar equipamentos:", err);
-        setEquipamentos([]);
+        setPagina({ content: [], page: 0, totalPages: 0, totalElements: 0 });
       })
       .finally(() => setLoading(false));
-  }, [token]);
+  }, [page, buscaDebounced, token]);
 
   useEffect(() => {
     carregar();
   }, [carregar]);
 
-  const filtrados = equipamentos.filter((eq) => {
-    const termo = search.toLowerCase();
-    return (
-      (eq.equipamento || "").toLowerCase().includes(termo) ||
-      (eq.cliente?.pessoa?.nome || "").toLowerCase().includes(termo)
-    );
-  });
+  const filtrados = pagina.content;
 
   const handleAdd = () => {
     setEquipamentoEditando(null);
@@ -64,8 +77,9 @@ const Equipamentos = () => {
     if (!window.confirm(`Excluir o equipamento "${eq.equipamento}"? Essa ação não pode ser desfeita.`)) return;
 
     try {
-      await excluirEquipamento(eq.id, token);
-      setFeedback(`Equipamento "${eq.equipamento}" excluído com sucesso.`);
+      // o servidor diz se apagou de vez ou só inativou (equipamento com ordens de serviço)
+      const mensagem = await excluirEquipamento(eq.id, token);
+      setFeedback(mensagem || `Equipamento "${eq.equipamento}" excluído com sucesso.`);
       carregar();
     } catch (err) {
       setError(err.message || "Não foi possível excluir o equipamento.");
@@ -111,9 +125,12 @@ const Equipamentos = () => {
         <FiSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm" />
         <input
           type="text"
-          placeholder="Buscar por equipamento ou cliente"
+          placeholder="Buscar por equipamento, marca, modelo ou cliente"
           value={search}
-          onChange={(e) => setSearch(e.target.value)}
+          onChange={(e) => {
+            setSearch(e.target.value);
+            setPage(0);
+          }}
           className="w-full pl-9 pr-3 py-2 rounded-md border border-gray-200 bg-white text-sm text-gray-700 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400 shadow-sm"
         />
       </div>
@@ -150,18 +167,27 @@ const Equipamentos = () => {
                   >
                     <FiEdit2 className="text-base" />
                   </button>
-                  <button
-                    onClick={() => handleRemove(eq)}
-                    className="inline-flex items-center justify-center h-8 w-8 rounded-full text-red-500 hover:bg-red-50 transition-colors"
-                    title="Remover"
-                  >
-                    <FiTrash2 className="text-base" />
-                  </button>
+                  {isAdmin && (
+                    <button
+                      onClick={() => handleRemove(eq)}
+                      className="inline-flex items-center justify-center h-8 w-8 rounded-full text-red-500 hover:bg-red-50 transition-colors"
+                      title="Remover"
+                    >
+                      <FiTrash2 className="text-base" />
+                    </button>
+                  )}
                 </div>
               </div>
             ))
           )}
         </div>
+        <Paginacao
+          page={pagina.page}
+          totalPages={pagina.totalPages}
+          totalElements={pagina.totalElements}
+          size={TAMANHO_PAGINA}
+          onChange={setPage}
+        />
       </div>
 
       <EquipamentoFormModal

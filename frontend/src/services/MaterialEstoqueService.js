@@ -59,3 +59,20 @@ export const excluirMaterial = async (id, token) => {
 
     return response.text();
 };
+
+// Lista paginada pelo servidor: { content, page, size, totalElements, totalPages }.
+// abaixoMinimo: só materiais com estoque igual ou abaixo do mínimo cadastrado.
+export const buscarMateriaisPaginado = async (
+    { page = 0, size = 10, q = "", abaixoMinimo = false },
+    token,
+) => {
+    const params = new URLSearchParams({ page, size, q, abaixoMinimo });
+    const config = requestConfig("GET", null, token);
+    const response = await fetch(`${apiBase}/materiais/v1/paginado?${params}`, config);
+
+    if (!response.ok) {
+        throw new Error("Não foi possível carregar a lista de materiais.");
+    }
+
+    return response.json();
+};

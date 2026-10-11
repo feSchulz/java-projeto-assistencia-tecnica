@@ -74,3 +74,16 @@ export const excluirCliente = async (id, token) => {
 
     return response.text();
 };
+
+// Lista paginada pelo servidor: { content, page, size, totalElements, totalPages }
+export const buscarClientesPaginado = async ({ page = 0, size = 10, q = "" }, token) => {
+    const params = new URLSearchParams({ page, size, q });
+    const config = requestConfig("GET", null, token);
+    const response = await fetch(`${apiBase}/clientes/v1/paginado?${params}`, config);
+
+    if (!response.ok) {
+        throw new Error("Não foi possível carregar a lista de clientes.");
+    }
+
+    return response.json();
+};

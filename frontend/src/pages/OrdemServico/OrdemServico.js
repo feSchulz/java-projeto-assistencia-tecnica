@@ -3,68 +3,71 @@ import { FiFileText, FiSearch, FiEye, FiTool, FiPlusCircle, FiTrash2 } from "rea
 import { useSelector } from "react-redux";
 import OrdemServicoFormModal from "../../components/OrdemServicoFormModal";
 import OrdemServicoDetalheModal from "../../components/OrdemServicoDetalheModal";
+import Paginacao from "../../components/Paginacao";
 import {
-  listarOrdensServico,
-  listarOrdensServicoPorStatus,
+  buscarOrdensServicoPaginado,
   excluirOrdemServico,
   statusLabel,
+  statusPillClasses,
   STATUS_OS,
 } from "../../services/OrdemServicoService";
+import { usePermissoes } from "../../utils/permissoes";
+import { useDebouncedValue } from "../../utils/hooks";
+import { useNavegacao } from "../../context/NavegacaoContext";
 
-const pillClasses = (status) => {
-  const label = statusLabel(status);
-  if (label === "Concluída") return "bg-green-50 text-green-700";
-  if (label === "Cancelada") return "bg-red-50 text-red-700";
-  if (label === "Em andamento") return "bg-orange-50 text-orange-700";
-  return "bg-blue-50 text-blue-700"; // Aberta
-};
+const TAMANHO_PAGINA = 10;
 
 const OrdemServico = () => {
   const { token } = useSelector((state) => state.auth);
+  const { isAdmin } = usePermissoes();
+  const { parametros, limpar } = useNavegacao();
 
-  const [orders, setOrders] = useState([]);
+  const [pagina, setPagina] = useState({ content: [], page: 0, totalPages: 0, totalElements: 0 });
+  const [page, setPage] = useState(0);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [statusFiltro, setStatusFiltro] = useState("");
+  const [somenteAtrasadas, setSomenteAtrasadas] = useState(false);
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [osSelecionada, setOsSelecionada] = useState(null);
   const [feedback, setFeedback] = useState("");
   const [error, setError] = useState("");
 
+  const buscaDebounced = useDebouncedValue(search);
+
+  // Filtros vindos de outra tela (busca global do cabeçalho, cards do Dashboard).
+  useEffect(() => {
+    if (!parametros) return;
+    if (parametros.busca !== undefined) setSearch(String(parametros.busca));
+    if (parametros.status !== undefined) setStatusFiltro(parametros.status);
+    if (parametros.atrasadas !== undefined) setSomenteAtrasadas(!!parametros.atrasadas);
+    setPage(0);
+    limpar();
+  }, [parametros, limpar]);
+
   const carregarOrdens = useCallback(() => {
     setLoading(true);
     setError("");
 
-    const requisicao = statusFiltro
-      ? listarOrdensServicoPorStatus(
-          STATUS_OS.find((s) => s.nome === statusFiltro)?.codigo ?? 0,
-          token,
-        )
-      : listarOrdensServico(token);
-
-    requisicao
-      .then(setOrders)
+    buscarOrdensServicoPaginado(
+      { page, size: TAMANHO_PAGINA, q: buscaDebounced, status: statusFiltro, atrasadas: somenteAtrasadas },
+      token,
+    )
+      .then(setPagina)
       // Lista vazia (ou falha pontual ao buscar) não é erro: a tela já trata
       // isso com "Nenhuma ordem de serviço encontrada.", sem banner de erro.
       .catch((err) => {
         console.error("Erro ao carregar ordens de serviço:", err);
-        setOrders([]);
+        setPagina({ content: [], page: 0, totalPages: 0, totalElements: 0 });
       })
       .finally(() => setLoading(false));
-  }, [statusFiltro, token]);
+  }, [page, buscaDebounced, statusFiltro, somenteAtrasadas, token]);
 
   useEffect(() => {
     carregarOrdens();
   }, [carregarOrdens]);
 
-  const filteredOrders = orders.filter((o) => {
-    const termo = search.toLowerCase();
-    return (
-      String(o.id).includes(search) ||
-      (o.cliente?.pessoa?.nome || "").toLowerCase().includes(termo) ||
-      (o.equipamento?.equipamento || "").toLowerCase().includes(termo)
-    );
-  });
+  const orders = pagina.content;
 
   const handleNewOrder = () => {
     setFeedback("");
@@ -80,12 +83,17 @@ const OrdemServico = () => {
     setOsSelecionada(os);
   };
 
+  const mudarFiltro = (setter) => (valor) => {
+    setter(valor);
+    setPage(0);
+  };
+
   const handleRemoveOrder = async (os) => {
     if (!window.confirm(`Excluir a OS #${os.id}? Essa ação não pode ser desfeita.`)) return;
 
     try {
       await excluirOrdemServico(os.id, token);
-      setFeedback(`OS #${os.id} excluída com sucesso.`);
+      setFeedback(`OS #${os.id} excluída com sucesso. As peças dela voltaram ao estoque.`);
       carregarOrdens();
     } catch (err) {
       setError(err.message || "Não foi possível excluir a ordem de serviço.");
@@ -145,7 +153,7 @@ const OrdemServico = () => {
             type="text"
             placeholder="Buscar por número da OS, cliente ou equipamento"
             value={search}
-            onChange={(e) => setSearch(e.target.value)}
+            onChange={(e) => mudarFiltro(setSearch)(e.target.value)}
             className="
               w-full pl-9 pr-3 py-2
               rounded-md border border-gray-200
@@ -158,7 +166,7 @@ const OrdemServico = () => {
         </div>
         <select
           value={statusFiltro}
-          onChange={(e) => setStatusFiltro(e.target.value)}
+          onChange={(e) => mudarFiltro(setStatusFiltro)(e.target.value)}
           className="rounded-md border border-gray-200 bg-white px-3 py-2 text-sm text-gray-700 shadow-sm focus:border-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-400"
         >
           <option value="">Todos os status</option>
@@ -168,6 +176,15 @@ const OrdemServico = () => {
             </option>
           ))}
         </select>
+        <label className="inline-flex items-center gap-2 whitespace-nowrap text-sm text-gray-600">
+          <input
+            type="checkbox"
+            checked={somenteAtrasadas}
+            onChange={(e) => mudarFiltro(setSomenteAtrasadas)(e.target.checked)}
+            className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-400"
+          />
+          Só atrasadas
+        </label>
       </div>
 
       {/* Card/Tabela */}
@@ -187,12 +204,12 @@ const OrdemServico = () => {
             <div className="px-4 py-6 text-center text-sm text-gray-500">
               Carregando ordens de serviço...
             </div>
-          ) : filteredOrders.length === 0 ? (
+          ) : orders.length === 0 ? (
             <div className="px-4 py-6 text-center text-sm text-gray-500">
               Nenhuma OS encontrada.
             </div>
           ) : (
-            filteredOrders.map((o) => (
+            orders.map((o) => (
               <div
                 key={o.id}
                 className="
@@ -212,7 +229,7 @@ const OrdemServico = () => {
                 {/* Status com pill */}
                 <span>
                   <span
-                    className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium ${pillClasses(o.status)}`}
+                    className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium ${statusPillClasses(o.status)}`}
                   >
                     {statusLabel(o.status)}
                   </span>
@@ -234,23 +251,32 @@ const OrdemServico = () => {
                     <FiEye className="text-sm" />
                     <span>Ver detalhes</span>
                   </button>
-                  <button
-                    onClick={() => handleRemoveOrder(o)}
-                    className="
-                      inline-flex items-center justify-center
-                      h-8 w-8 rounded-full
-                      text-red-500 hover:bg-red-50
-                      transition-colors
-                    "
-                    title="Excluir"
-                  >
-                    <FiTrash2 className="text-sm" />
-                  </button>
+                  {isAdmin && (
+                    <button
+                      onClick={() => handleRemoveOrder(o)}
+                      className="
+                        inline-flex items-center justify-center
+                        h-8 w-8 rounded-full
+                        text-red-500 hover:bg-red-50
+                        transition-colors
+                      "
+                      title="Excluir"
+                    >
+                      <FiTrash2 className="text-sm" />
+                    </button>
+                  )}
                 </div>
               </div>
             ))
           )}
         </div>
+        <Paginacao
+          page={pagina.page}
+          totalPages={pagina.totalPages}
+          totalElements={pagina.totalElements}
+          size={TAMANHO_PAGINA}
+          onChange={setPage}
+        />
       </div>
 
       <OrdemServicoFormModal
@@ -263,6 +289,7 @@ const OrdemServico = () => {
         isOpen={!!osSelecionada}
         onClose={() => setOsSelecionada(null)}
         ordemServico={osSelecionada}
+        onChanged={carregarOrdens}
       />
     </section>
   );

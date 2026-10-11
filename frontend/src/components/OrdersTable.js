@@ -1,44 +1,41 @@
-import React from "react";
+import React, { useState } from "react";
+import OrdemServicoDetalheModal from "./OrdemServicoDetalheModal";
+import { statusLabel, statusPillClasses } from "../services/OrdemServicoService";
 import {
   FaClipboard,
   FaUser,
   FaCalendar,
   FaCheckCircle,
-  FaClock,
   FaMoneyBill,
   FaEye,
 } from "react-icons/fa";
 
-const orders = [
-  {
-    id: "#1234",
-    client: "João Silva",
-    date: "04/02/2026",
-    status: "entregue",
-    total: "R$ 1.250",
-  },
-  {
-    id: "#1233",
-    client: "Maria Santos",
-    date: "03/02/2026",
-    status: "pendente",
-    total: "R$ 890",
-  },
-  {
-    id: "#1232",
-    client: "Carlos Lima",
-    date: "02/02/2026",
-    status: "entregue",
-    total: "R$ 2.100",
-  },
-];
-
-const statusColors = {
-  entregue: "bg-green-50 text-green-700",
-  pendente: "bg-yellow-50 text-yellow-700",
+const formatarData = (valor) => {
+  if (!valor) return "—";
+  const data = new Date(valor);
+  return Number.isNaN(data.getTime()) ? "—" : data.toLocaleDateString("pt-BR");
 };
 
-const OrdersTable = () => (
+const formatarMoeda = (valor) =>
+  valor != null
+    ? Number(valor).toLocaleString("pt-BR", { style: "currency", currency: "BRL" })
+    : "—";
+
+const QUANTIDADE = 5;
+
+// Últimas ordens de serviço reais (mais recentes primeiro), vindas do Dashboard.
+const OrdersTable = ({ ordens = [], loading = false, onChanged }) => {
+  const [selecionada, setSelecionada] = useState(null);
+
+  const ultimas = [...ordens]
+    .sort((a, b) => {
+      const da = new Date(a.dataAbertura).getTime() || 0;
+      const db = new Date(b.dataAbertura).getTime() || 0;
+      return db - da || (b.id || 0) - (a.id || 0);
+    })
+    .slice(0, QUANTIDADE);
+
+  return (
   <section className="space-y-4">
     {/* Header da seção */}
     <div className="flex items-center justify-between">
@@ -102,52 +99,64 @@ const OrdersTable = () => (
           </tr>
         </thead>
         <tbody className="divide-y divide-gray-100">
-          {orders.map((order, index) => (
-            <tr key={index} className="hover:bg-blue-50/60 transition-colors">
-              <td className="px-4 py-3 text-sm font-medium text-gray-900">
-                {order.id}
-              </td>
-              <td className="px-4 py-3 text-sm text-gray-700">
-                {order.client}
-              </td>
-              <td className="px-4 py-3 text-sm text-gray-700">{order.date}</td>
-              <td className="px-4 py-3 text-sm">
-                <span
-                  className={`
-                    inline-flex items-center px-2.5 py-1 rounded-full
-                    text-xs font-medium
-                    ${statusColors[order.status]}
-                  `}
-                >
-                  {order.status === "entregue" ? (
-                    <FaCheckCircle className="mr-1 w-3 h-3" />
-                  ) : (
-                    <FaClock className="mr-1 w-3 h-3" />
-                  )}
-                  {order.status === "entregue" ? "Entregue" : "Pendente"}
-                </span>
-              </td>
-              <td className="px-4 py-3 text-sm font-semibold text-gray-900">
-                {order.total}
-              </td>
-              {/* AÇÕES - PERFEITAMENTE ALINHADA */}
-              {/* CORPO - td da coluna Ações (permanece igual) */}
-              <td className="px-4 py-3 text-right text-sm">
-                <button
-                className=" inline-flex items-center gap-1 px-3 py-1.5 rounded-full 
-                text-blue-600 bg-blue-50 hover:bg-blue-100
-                text-xs font-medium transition-colors "
-                >
-                  <FaEye className="w-3 h-3" />
-                  <span>Ver detalhes</span>
-                </button>
+          {loading && (
+            <tr>
+              <td colSpan={6} className="px-4 py-6 text-center text-sm text-gray-500">
+                Carregando ordens de serviço...
               </td>
             </tr>
-          ))}
+          )}
+          {!loading && ultimas.length === 0 && (
+            <tr>
+              <td colSpan={6} className="px-4 py-6 text-center text-sm text-gray-500">
+                Nenhuma ordem de serviço encontrada.
+              </td>
+            </tr>
+          )}
+          {!loading &&
+            ultimas.map((os) => (
+              <tr key={os.id} className="hover:bg-blue-50/60 transition-colors">
+                <td className="px-4 py-3 text-sm font-medium text-gray-900">#{os.id}</td>
+                <td className="px-4 py-3 text-sm text-gray-700">
+                  {os.cliente?.pessoa?.nome || "—"}
+                </td>
+                <td className="px-4 py-3 text-sm text-gray-700">
+                  {formatarData(os.dataAbertura)}
+                </td>
+                <td className="px-4 py-3 text-sm">
+                  <span
+                    className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium ${statusPillClasses(os.status)}`}
+                  >
+                    {statusLabel(os.status)}
+                  </span>
+                </td>
+                <td className="px-4 py-3 text-sm font-semibold text-gray-900">
+                  {formatarMoeda(os.valor)}
+                </td>
+                <td className="px-4 py-3 text-right text-sm">
+                  <button
+                    type="button"
+                    onClick={() => setSelecionada(os)}
+                    className="inline-flex items-center gap-1 px-3 py-1.5 rounded-full text-blue-600 bg-blue-50 hover:bg-blue-100 text-xs font-medium transition-colors"
+                  >
+                    <FaEye className="w-3 h-3" />
+                    <span>Ver detalhes</span>
+                  </button>
+                </td>
+              </tr>
+            ))}
         </tbody>
       </table>
     </div>
+
+    <OrdemServicoDetalheModal
+      isOpen={!!selecionada}
+      onClose={() => setSelecionada(null)}
+      ordemServico={selecionada}
+      onChanged={onChanged}
+    />
   </section>
-);
+  );
+};
 
 export default OrdersTable;

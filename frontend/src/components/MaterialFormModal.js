@@ -18,6 +18,7 @@ const initialForm = {
   marcaId: "",
   modeloId: "",
   quantidadeEstoque: "",
+  estoqueMinimo: "",
   valorUnitario: "",
   status: "NOVA",
 };
@@ -51,6 +52,8 @@ const MaterialFormModal = ({ isOpen, onClose, onCreated, materialEditando }) => 
         modeloId: materialEditando.modelo?.id != null ? String(materialEditando.modelo.id) : "",
         quantidadeEstoque:
           materialEditando.quantidadeEstoque != null ? String(materialEditando.quantidadeEstoque) : "",
+        estoqueMinimo:
+          materialEditando.estoqueMinimo != null ? String(materialEditando.estoqueMinimo) : "",
         valorUnitario: materialEditando.valorUnitario != null ? String(materialEditando.valorUnitario) : "",
         status: materialEditando.status || "NOVA",
       });
@@ -97,6 +100,8 @@ const MaterialFormModal = ({ isOpen, onClose, onCreated, materialEditando }) => 
         marca: { id: Number(form.marcaId) },
         modelo: { id: Number(form.modeloId) },
         quantidadeEstoque: Number(form.quantidadeEstoque),
+        // estoque mínimo é opcional: vazio = sem alerta de reposição
+        estoqueMinimo: form.estoqueMinimo === "" ? null : Number(form.estoqueMinimo),
         valorUnitario: Number(form.valorUnitario),
         status: form.status,
       };
@@ -244,6 +249,20 @@ const MaterialFormModal = ({ isOpen, onClose, onCreated, materialEditando }) => 
                 value={form.quantidadeEstoque}
                 onChange={handleChange("quantidadeEstoque")}
                 className="w-full rounded-md border border-gray-200 bg-white px-3 py-2 text-sm text-gray-700 shadow-sm focus:border-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-400"
+              />
+            </div>
+
+            <div>
+              <label className="mb-1 block text-xs font-medium text-gray-600">
+                Estoque mínimo (alerta de reposição)
+              </label>
+              <input
+                type="number"
+                min="0"
+                value={form.estoqueMinimo}
+                onChange={handleChange("estoqueMinimo")}
+                placeholder="Opcional"
+                className="w-full rounded-md border border-gray-200 bg-white px-3 py-2 text-sm text-gray-700 shadow-sm placeholder:text-gray-400 focus:border-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-400"
               />
             </div>
 

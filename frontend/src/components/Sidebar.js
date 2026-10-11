@@ -9,6 +9,7 @@ import {
   FaTags,
   FaBoxes,
 } from "react-icons/fa";
+import { usePermissoes } from "../utils/permissoes";
 
 // Funcionários e Papéis não aparecem mais aqui: viraram submenus dentro de
 // Configurações (id 4).
@@ -19,13 +20,16 @@ const initialItems = [
   { id: 6, icon: FaLaptop, label: "Equipamentos" },
   { id: 7, icon: FaTags, label: "Marcas e Modelos" },
   { id: 8, icon: FaBoxes, label: "Materiais" },
-  { id: 4, icon: FaCog, label: "Configurações" },
+  { id: 4, icon: FaCog, label: "Configurações", somenteAdmin: true },
 ];
 
 const Sidebar = ({ activeMenuId, onMenuChange }) => {
+  const { isAdmin } = usePermissoes();
+  const itens = initialItems.filter((item) => !item.somenteAdmin || isAdmin);
+
   return (
     <aside className="w-60 bg-blue-100 text-blue-900 p-5 flex flex-col">
-      {initialItems.map((item) => (
+      {itens.map((item) => (
         <button
           key={item.id}
           type="button"

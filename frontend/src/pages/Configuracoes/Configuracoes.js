@@ -1,15 +1,28 @@
 import React, { useState } from "react";
-import { FiUserCheck, FiShield, FiSettings } from "react-icons/fi";
+import { FiUserCheck, FiShield, FiSettings, FiList } from "react-icons/fi";
 import Funcionarios from "../Funcionarios/Funcionarios";
 import Papeis from "../Papeis/Papeis";
+import Auditoria from "../Auditoria/Auditoria";
+import { usePermissoes } from "../../utils/permissoes";
 
 const abas = [
   { id: "funcionarios", label: "Funcionários", icon: FiUserCheck, Componente: Funcionarios },
   { id: "papeis", label: "Papéis", icon: FiShield, Componente: Papeis },
+  { id: "auditoria", label: "Auditoria", icon: FiList, Componente: Auditoria },
 ];
 
 const Configuracoes = () => {
+  const { isAdmin } = usePermissoes();
   const [abaAtiva, setAbaAtiva] = useState("funcionarios");
+
+  // Configurações inteira é para administrador; o backend também bloqueia.
+  if (!isAdmin) {
+    return (
+      <div className="rounded-md border border-red-100 bg-red-50 px-4 py-3 text-sm text-red-700">
+        Apenas administradores podem acessar as configurações.
+      </div>
+    );
+  }
 
   const AbaAtivaComponente = abas.find((a) => a.id === abaAtiva)?.Componente;
 
@@ -23,7 +36,7 @@ const Configuracoes = () => {
           <div>
             <h2 className="text-lg font-semibold text-blue-900">Configurações</h2>
             <p className="text-xs text-gray-500">
-              Gerencie funcionários e papéis/perfis de acesso do sistema.
+              Gerencie funcionários, papéis/perfis de acesso e acompanhe o log de auditoria.
             </p>
           </div>
         </div>

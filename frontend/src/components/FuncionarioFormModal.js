@@ -5,8 +5,8 @@ import { useSelector } from "react-redux";
 import { criarFuncionario, atualizarFuncionario } from "../services/FuncionarioService";
 import { listarEstados, listarCidades } from "../services/EnderecoService";
 import { listarPapeis } from "../services/PapelService";
+import { onlyDigits, maskCpf, maskTelefone, maskCep } from "../utils/masks";
 
-const onlyDigits = (value) => value.replace(/\D/g, "");
 
 const initialForm = {
   login: "",
@@ -53,14 +53,14 @@ const FuncionarioFormModal = ({ isOpen, onClose, onCreated, funcionarioEditando 
         senha: "",
         papelId: funcionarioEditando.papel?.id != null ? String(funcionarioEditando.papel.id) : "",
         nome: usuario.nome || "",
-        cpf: usuario.cpf || "",
-        telefone: usuario.telefone || "",
+        cpf: onlyDigits(usuario.cpf || ""),
+        telefone: onlyDigits(usuario.telefone || ""),
         email: usuario.email || "",
         rua: endereco.rua || "",
         numero: endereco.numero != null ? String(endereco.numero) : "",
         bairro: endereco.bairro || "",
         complemento: endereco.complemento || "",
-        cep: endereco.cep || "",
+        cep: onlyDigits(endereco.cep || ""),
         estadoId: "",
         cidadeId: cidade.id != null ? String(cidade.id) : "",
       });
@@ -144,6 +144,16 @@ const FuncionarioFormModal = ({ isOpen, onClose, onCreated, funcionarioEditando 
     const faltando = obrigatorios.some((campo) => !form[campo]);
     if (faltando) {
       setError("Preencha todos os campos obrigatórios.");
+      return;
+    }
+
+    if (form.cpf.length !== 11) {
+      setError("CPF inválido: informe os 11 dígitos.");
+      return;
+    }
+
+    if (form.telefone.length < 10) {
+      setError("Telefone inválido: informe DDD e número.");
       return;
     }
 
@@ -298,9 +308,10 @@ const FuncionarioFormModal = ({ isOpen, onClose, onCreated, funcionarioEditando 
               <input
                 type="text"
                 inputMode="numeric"
-                value={form.cpf}
+                value={maskCpf(form.cpf)}
                 onChange={handleChange("cpf")}
-                placeholder="Somente números"
+                placeholder="000.000.000-00"
+                maxLength={14}
                 className="w-full rounded-md border border-gray-200 bg-white px-3 py-2 text-sm text-gray-700 shadow-sm placeholder:text-gray-400 focus:border-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-400"
               />
             </div>
@@ -310,9 +321,10 @@ const FuncionarioFormModal = ({ isOpen, onClose, onCreated, funcionarioEditando 
               <input
                 type="text"
                 inputMode="numeric"
-                value={form.telefone}
+                value={maskTelefone(form.telefone)}
                 onChange={handleChange("telefone")}
-                placeholder="Somente números"
+                placeholder="(00) 00000-0000"
+                maxLength={15}
                 className="w-full rounded-md border border-gray-200 bg-white px-3 py-2 text-sm text-gray-700 shadow-sm placeholder:text-gray-400 focus:border-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-400"
               />
             </div>
@@ -416,8 +428,10 @@ const FuncionarioFormModal = ({ isOpen, onClose, onCreated, funcionarioEditando 
               <input
                 type="text"
                 inputMode="numeric"
-                value={form.cep}
+                value={maskCep(form.cep)}
                 onChange={handleChange("cep")}
+                placeholder="00000-000"
+                maxLength={9}
                 className="w-full rounded-md border border-gray-200 bg-white px-3 py-2 text-sm text-gray-700 shadow-sm focus:border-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-400"
               />
             </div>

@@ -7,9 +7,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import com.assitenciaTecnica.logos.controllers.docs.ClienteControllerDocs;
-import com.assitenciaTecnica.logos.data.dto.CidadeDTO;
 import com.assitenciaTecnica.logos.data.dto.ClienteDTO;
-import com.assitenciaTecnica.logos.mapper.ObjectMapper;
 import com.assitenciaTecnica.logos.model.Cidade;
 import com.assitenciaTecnica.logos.services.ClienteService;
 import com.assitenciaTecnica.logos.services.EnderecoService;
@@ -35,9 +33,11 @@ public class ClienteController implements ClienteControllerDocs {
     @Override
     public ResponseEntity<String> createCliente(@RequestBody ClienteDTO clienteDTO) {
         try {
-            CidadeDTO cidade = enderecoService.buscarCidadesById(   // ← 2. usar o campo, não "new EnderecoService()"
+            // Busca a entidade Cidade direto no repositório (não via Dozer) —
+            // ver comentário em EnderecoService.buscarCidadeEntidadeById.
+            Cidade cidade = enderecoService.buscarCidadeEntidadeById(
                     clienteDTO.getPessoa().getEndereco().getCidade().getId());
-            clienteDTO.getPessoa().getEndereco().setCidade(ObjectMapper.parseObject(cidade, Cidade.class));
+            clienteDTO.getPessoa().getEndereco().setCidade(cidade);
             clienteService.salvar(clienteDTO);
             return ResponseEntity.ok("Cliente cadastrado com sucesso");
         } catch (Exception e) {
@@ -101,9 +101,11 @@ public class ClienteController implements ClienteControllerDocs {
                     && clienteDTO.getPessoa().getEndereco() != null
                     && clienteDTO.getPessoa().getEndereco().getCidade() != null
                     && clienteDTO.getPessoa().getEndereco().getCidade().getId() != null) {
-                CidadeDTO cidade = enderecoService.buscarCidadesById(
+                // Busca a entidade Cidade direto no repositório (não via Dozer) —
+                // ver comentário em EnderecoService.buscarCidadeEntidadeById.
+                Cidade cidade = enderecoService.buscarCidadeEntidadeById(
                         clienteDTO.getPessoa().getEndereco().getCidade().getId());
-                clienteDTO.getPessoa().getEndereco().setCidade(ObjectMapper.parseObject(cidade, Cidade.class));
+                clienteDTO.getPessoa().getEndereco().setCidade(cidade);
             }
             clienteService.atualizar(clienteDTO);
             return ResponseEntity.ok("Cliente editado com sucesso");
